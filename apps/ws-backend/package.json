@@ -16,7 +16,8 @@
     "@repo/typescript-config": "workspace:*",
     "@types/ws": "^8.18.1",
     "@repo/common": "workspace:*",
-    "@repo/pure-common": "workspace:*"
+    "@repo/pure-common": "workspace:*",
+    "@repo/db": "workspace:*"
   },
   "keywords": [],
   "author": "",
