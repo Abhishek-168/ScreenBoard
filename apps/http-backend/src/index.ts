@@ -23,13 +23,17 @@ app.post("/signup", async (req: Request, res: Response) => {
   const password = parsedData.data?.password || ""
   const name = parsedData.data?.name || ""
 
-  const user = await prismaClient.user.create({
+  try {
+    const user = await prismaClient.user.create({
     data: {
       email: parsedData.data?.email || "",
       password: parsedData.data?.password || "",
       name: parsedData.data?.name || "",
     }
   })
+  } catch (error) {
+    res.status(411).send(error)
+  }
   if (!email || !password)
     res.status(400).json({
       message: "Username or Password is empty",
@@ -37,24 +41,55 @@ app.post("/signup", async (req: Request, res: Response) => {
   res.status(200).send(email);
 });
 
-app.post("/signin", middleAuth, (req: Request, res: Response) => {
-  const safeParse = signinSchema.parse(req.body);
-  if (!safeParse) {
+app.post("/signin", async (req: Request, res: Response) => {
+  const parsedData = signinSchema.safeParse(req.body);
+  if (!parsedData.success) {
     console.log("Failed at Signin Zod level");
     return;
   }
-  const { username, password } = safeParse;
-  const token = jwt.sign(username + password, SECRET);
+  const { email, password } = parsedData.data;
+  console.log("Email: " + email + "Password: " + password )
+
+  const user = await prismaClient.user.findFirst({
+    where: {
+      email: email,
+      password: password
+    }
+  })
+  if (!user)
+  {
+    console.log("user not found")
+    return res.status(404).send({error: "user not found in db"})
+  }
+  const userId = user.id
+
+  const token = jwt.sign({userId: userId}, SECRET);
   console.log("Signin Successful");
   res.status(200).send(token);
 });
 
-app.post("/create-room", middleAuth, (req, res) => {
-  const safeParse = createRoomSchema.parse(req.body);
-  if (!safeParse) {
+app.post("/create-room", middleAuth, async (req, res) => {
+  const safeParse = createRoomSchema.safeParse(req.body);
+  if (!safeParse.success) {
     console.log("Failed at Create Room Zod level");
     return;
   }
+  //@ts-ignore
+  const userId = req.userId;
+  console.log("userid is " + userId)
+  try {
+    const room = await prismaClient.room.create({
+      data: {
+        name: safeParse.data.name,
+        adminId: userId
+      }
+    })
+    res.status(200).send({roomId : room.id})
+  } catch(error)
+  {
+    res.status(411).send({errrror: error})
+  }
+  
 });
 
 app.listen(3001);
