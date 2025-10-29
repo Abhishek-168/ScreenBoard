@@ -7,7 +7,7 @@ import {
   createRoomSchema,
 } from "@repo/pure-common/types";
 import { middleAuth } from "./middleware";
-import {prismaClient} from "@repo/db/datab"
+import { prismaClient } from "@repo/db/datab";
 
 const app = express();
 app.use(express.json());
@@ -15,24 +15,24 @@ app.use(express.json());
 app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
   if (!parsedData.success) {
-    console.log("Failed at Signin Zod level");
+    console.log("Failed at Signup Zod level");
     return;
   }
-  console.log("safe parse is : " + parsedData)
-  const email = parsedData.data?.email || ""
-  const password = parsedData.data?.password || ""
-  const name = parsedData.data?.name || ""
+  console.log("safe parse is : " + parsedData);
+  const email = parsedData.data?.email || "";
+  const password = parsedData.data?.password || "";
+  const name = parsedData.data?.name || "";
 
   try {
     const user = await prismaClient.user.create({
-    data: {
-      email: parsedData.data?.email || "",
-      password: parsedData.data?.password || "",
-      name: parsedData.data?.name || "",
-    }
-  })
+      data: {
+        email: parsedData.data?.email || "",
+        password: parsedData.data?.password || "",
+        name: parsedData.data?.name || "",
+      },
+    });
   } catch (error) {
-    res.status(411).send(error)
+    res.status(411).send(error);
   }
   if (!email || !password)
     res.status(400).json({
@@ -48,22 +48,21 @@ app.post("/signin", async (req: Request, res: Response) => {
     return;
   }
   const { email, password } = parsedData.data;
-  console.log("Email: " + email + "Password: " + password )
+  console.log("Email: " + email + "Password: " + password);
 
   const user = await prismaClient.user.findFirst({
     where: {
       email: email,
-      password: password
-    }
-  })
-  if (!user)
-  {
-    console.log("user not found")
-    return res.status(404).send({error: "user not found in db"})
+      password: password,
+    },
+  });
+  if (!user) {
+    console.log("user not found");
+    return res.status(404).send({ error: "user not found in db" });
   }
-  const userId = user.id
+  const userId = user.id;
 
-  const token = jwt.sign({userId: userId}, SECRET);
+  const token = jwt.sign({ userId: userId }, SECRET);
   console.log("Signin Successful");
   res.status(200).send(token);
 });
@@ -76,20 +75,34 @@ app.post("/create-room", middleAuth, async (req, res) => {
   }
   //@ts-ignore
   const userId = req.userId;
-  console.log("userid is " + userId)
+  console.log("userid is " + userId);
   try {
     const room = await prismaClient.room.create({
       data: {
         name: safeParse.data.name,
-        adminId: userId
-      }
-    })
-    res.status(200).send({roomId : room.id})
-  } catch(error)
-  {
-    res.status(411).send({errrror: error})
+        adminId: userId,
+      },
+    });
+    res.status(200).send({ roomId: room.id });
+  } catch (error) {
+    res.status(411).send({ errrror: error });
   }
-  
 });
+
+app.post("/chat/:roomId", async (req, res) => {
+  const roomId = Number(req.params.roomId)
+  const allMessages = await prismaClient.chat.findMany({
+    where: {
+      roomId: roomId
+    },
+    orderBy: {
+      id: "desc"
+    },
+    take: 50
+  })
+  res.json({
+    allMessages
+  })
+})
 
 app.listen(3001);
