@@ -89,20 +89,32 @@ app.post("/create-room", middleAuth, async (req, res) => {
   }
 });
 
-app.post("/chat/:roomId", async (req, res) => {
-  const roomId = Number(req.params.roomId)
+app.get("/chat/:roomId", async (req, res) => {
+  const roomId = Number(req.params.roomId);
   const allMessages = await prismaClient.chat.findMany({
     where: {
-      roomId: roomId
+      roomId: roomId,
     },
     orderBy: {
-      id: "desc"
+      id: "desc",
     },
-    take: 50
-  })
+    take: 50,
+  });
   res.json({
-    allMessages
-  })
-})
+    allMessages,
+  });
+});
+
+app.get("/room/:slug", async (req, res) => {
+  const slug = req.params.slug;
+  const room = await prismaClient.room.findFirst({
+    where: {
+      name: slug,
+    },
+  });
+  res.json({
+    room,
+  });
+});
 
 app.listen(3001);
