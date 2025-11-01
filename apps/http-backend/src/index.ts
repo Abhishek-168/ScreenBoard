@@ -8,10 +8,14 @@ import {
 } from "@repo/pure-common/types";
 import { middleAuth } from "./middleware";
 import { prismaClient } from "@repo/db/datab";
+import cors from "cors"
 
 const app = express();
 app.use(express.json());
-
+app.use(cors({
+  origin: 'http://localhost:3000', 
+  credentials: true
+}));
 app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
   if (!parsedData.success) {
