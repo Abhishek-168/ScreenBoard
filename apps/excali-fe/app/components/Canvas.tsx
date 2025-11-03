@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 // import { initDraw } from "../draw";
 import { Game } from "../draw/Game";
-export type Tool = "circle" | "rect" | "sqaure";
+export type Tool = "circle" | "rect" | "sqaure" | "line";
 
 export default function Canvas({
   roomId,
@@ -60,6 +60,13 @@ export default function Canvas({
           >
             {" "}
             Square{" "}
+          </button>
+          <button
+            className="cursor-pointer p-2 hover:bg-gray-500 rounded-md"
+            onClick={() => setSelectedTool("line")}
+          >
+            {" "}
+            Line{" "}
           </button>
         </div>
       </div>

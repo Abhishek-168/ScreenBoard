@@ -22,6 +22,14 @@ type Shape =
       x: number;
       y: number;
       length: number;
+    }
+  | {
+      type: "line";
+      x: number;
+      y: number;
+      endX: number;
+      endY: number;
+      length: number;
     };
 
 export class Game {
@@ -83,6 +91,13 @@ export class Game {
         this.ctx.beginPath();
         this.ctx.arc(shape.x, shape.y, Math.abs(shape.radius), 0, Math.PI * 2);
         this.ctx.stroke();
+      } else if (shape.type == "line") {
+        this.ctx.beginPath();
+        this.ctx.moveTo(shape.x, shape.y);
+        this.ctx.lineTo(shape.endX, shape.endY);
+        this.ctx.stroke();
+      } else if (shape.type == "square") {
+        this.ctx.strokeRect(shape.x, shape.y, shape.length, shape.length);
       }
     });
   }
@@ -100,12 +115,12 @@ export class Game {
     };
   }
 
-  handleMouseDown = (e : MouseEvent) => {
+  handleMouseDown = (e: MouseEvent) => {
     this.clicked = true;
     this.startX = e.clientX;
     this.startY = e.clientY;
-  }
-  handleMouseUp = (e : MouseEvent) =>{
+  };
+  handleMouseUp = (e: MouseEvent) => {
     this.clicked = false;
 
     this.endX = e.clientX;
@@ -123,7 +138,7 @@ export class Game {
         width: this.width,
         height: this.height,
       };
-    } else if ((this.selectedTool === "circle")) {
+    } else if (this.selectedTool === "circle") {
       console.log("tooooool is " + this.selectedTool);
       const radius = this.endY - this.startY;
       shape = {
@@ -131,6 +146,26 @@ export class Game {
         x: this.startX,
         y: this.startY,
         radius: radius,
+      };
+    } else if (this.selectedTool === "sqaure") {
+      shape = {
+        type: "square",
+        x: this.startX,
+        y: this.startY,
+        length: this.width,
+      };
+    } else if (this.selectedTool === "line") {
+      const length = Math.sqrt(
+        Math.pow(this.endX - this.startX, 2) +
+          Math.pow(this.endY - this.startY, 2)
+      );
+      shape = {
+        type: "line",
+        x: this.startX,
+        y: this.startY,
+        endX: this.endX,
+        endY: this.endY,
+        length: length,
       };
     }
     this.existingShapes.push(shape);
@@ -145,11 +180,11 @@ export class Game {
     );
     //   console.log("Existing shapes" + existingShapes)
     this.clearCanvas();
-  }
-  handleMouseMove = (e : MouseEvent) =>{
+  };
+  handleMouseMove = (e: MouseEvent) => {
     if (this.clicked) {
       console.log("tool is " + this.selectedTool);
-      this.clearCanvas()
+      this.clearCanvas();
       //   this.ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if (this.selectedTool == "rect") {
@@ -169,9 +204,17 @@ export class Game {
           Math.PI * 2
         );
         this.ctx.stroke();
+      } else if (this.selectedTool === "line") {
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.startX, this.startY);
+        this.ctx.lineTo(e.clientX, e.clientY);
+        this.ctx.stroke();
+      } else if (this.selectedTool === "sqaure") {
+        this.width = e.clientX - this.startX;
+        this.ctx.strokeRect(this.startX, this.startY, this.width, this.width);
       }
     }
-  }
+  };
 
   initMouseHandlers() {
     this.canvas.addEventListener("mousedown", this.handleMouseDown);
