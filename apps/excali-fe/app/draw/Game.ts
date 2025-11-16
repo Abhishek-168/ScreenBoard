@@ -124,7 +124,7 @@ export class Game {
     this.clicked = false;
 
     this.endX = e.clientX;
-    console.log("endX iiiiis" + e.clientX);
+    console.log("endX iiiiis " + e.clientX);
     this.endY = e.clientY;
     this.width = e.clientX - this.startX;
     this.height = e.clientY - this.startY;
