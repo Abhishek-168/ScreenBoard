@@ -2,11 +2,13 @@
 
 import axios from "axios";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const handleSubmit = async () => {
     try {
@@ -21,6 +23,7 @@ export default function Signup() {
       }
       localStorage.setItem("token", token);
       console.log("Token is " + token);
+      router.push("/rooms");
     } catch (error) {
       console.error("Sign in failed:", error);
     }

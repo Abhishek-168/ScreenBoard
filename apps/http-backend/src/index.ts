@@ -8,14 +8,16 @@ import {
 } from "@repo/pure-common/types";
 import { middleAuth } from "./middleware";
 import { prismaClient } from "@repo/db/datab";
-import cors from "cors"
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-  origin: 'http://localhost:3000', 
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
   if (!parsedData.success) {
@@ -93,6 +95,10 @@ app.post("/create-room", middleAuth, async (req, res) => {
   }
 });
 
+// app.get("/room/:roomName", async (req, res) => {
+
+// })
+
 app.get("/chat/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
   const allMessages = await prismaClient.chat.findMany({
@@ -116,6 +122,8 @@ app.get("/room/:slug", async (req, res) => {
       name: slug,
     },
   });
+  console.log("Sending room data from BE");
+  console.log("data from be " + room);
   res.json({
     room,
   });
