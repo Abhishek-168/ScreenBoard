@@ -24,7 +24,7 @@ app.post("/signup", async (req: Request, res: Response) => {
     console.log("Failed at Signup Zod level");
     return;
   }
-  console.log("safe parse is : " + parsedData);
+  console.log("safe parse is : " , parsedData);
   const email = parsedData.data?.email || "";
   const password = parsedData.data?.password || "";
   const name = parsedData.data?.name || "";
@@ -95,9 +95,10 @@ app.post("/create-room", middleAuth, async (req, res) => {
   }
 });
 
-// app.get("/room/:roomName", async (req, res) => {
-
-// })
+app.get("/allrooms", async (req, res) => {
+  const allrooms = await prismaClient.room.findMany()
+  res.json({allrooms,})
+})
 
 app.get("/chat/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
