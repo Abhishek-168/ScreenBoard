@@ -19,7 +19,8 @@ export const middleAuth = (req: Request, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, SECRET) as any;
-    req.body.userId = decoded.userId; // or req.userId if you declared it
+    //@ts-ignore
+    req.userId = decoded.userId; // or req.userId if you declared it
     next();
   } catch (error) {
     console.log("error at middleware level", error);

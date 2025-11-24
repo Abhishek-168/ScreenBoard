@@ -1,9 +1,11 @@
-// Allow user to create a room from UI
+// Allow user find a room and enter it
+// handle create new room button
+
 "use client";
-import { useReducer, useState } from "react";
+import { useState } from "react";
 import TopRooms from "../top_rooms/page";
 import axios from "axios";
-import Router, { useRouter } from "next/navigation";
+import  { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
 
 export default function Room() {
@@ -29,7 +31,9 @@ export default function Room() {
       console.log("search result is " + data.id);
     }
   };
-  const handleRoomCreate = () => {};
+  const handleRoomCreate = () => {
+    router.push("/create-room")
+  };
   return (
     <>
       <div className="flex justify-around w-[80vw] m-[5vw] border-b-blue-700">
