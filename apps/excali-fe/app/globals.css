@@ -1,1 +1,16 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Boldonse&display=swap');
+
+.font-boldonse {
+    font-family: 'Boldonse', sans-serif;
+}
+
+/* Brave/Chrome/Safari/Edge */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox fallback (doesn't affect Brave) */
+* {
+  scrollbar-width: none;
+}
