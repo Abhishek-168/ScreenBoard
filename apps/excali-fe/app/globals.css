@@ -1,8 +1,8 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Boldonse&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Boldonse&display=swap");
 
 .font-boldonse {
-    font-family: 'Boldonse', sans-serif;
+  font-family: "Boldonse", sans-serif;
 }
 
 /* Brave/Chrome/Safari/Edge */
@@ -13,4 +13,18 @@
 /* Firefox fallback (doesn't affect Brave) */
 * {
   scrollbar-width: none;
+}
+body {
+  background-color: black;
+}
+.feat-class::after {
+  content: " ";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 100%; /* 100% of the anchor */
+  border-bottom: 3px solid orange;
+  border-radius: 2px;
+  padding: 3px;
 }
