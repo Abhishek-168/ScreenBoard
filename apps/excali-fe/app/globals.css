@@ -16,6 +16,7 @@
 }
 body {
   background-color: black;
+  color: white;
 }
 .feat-class::after {
   content: " ";
@@ -27,4 +28,23 @@ body {
   border-bottom: 3px solid orange;
   border-radius: 2px;
   padding: 3px;
+}
+.curve {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+}
+
+.curve svg {
+    position: relative;
+    display: block;
+    width: calc(101% + 1.3px);
+    height: 166px;
+}
+
+.curve .shape-fill {
+    fill: #000000;
 }
