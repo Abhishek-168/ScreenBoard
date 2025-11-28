@@ -24,7 +24,7 @@ app.post("/signup", async (req: Request, res: Response) => {
     console.log("Failed at Signup Zod level");
     return;
   }
-  console.log("safe parse is : " , parsedData);
+  console.log("safe parse is : ", parsedData);
   const email = parsedData.data?.email || "";
   const password = parsedData.data?.password || "";
   const name = parsedData.data?.name || "";
@@ -37,6 +37,11 @@ app.post("/signup", async (req: Request, res: Response) => {
         name: parsedData.data?.name || "",
       },
     });
+    const userId = user.id;
+
+    const token = jwt.sign({ userId: userId }, SECRET);
+    console.log("Signup Successful");
+    res.status(200).send(token);
   } catch (error) {
     res.status(411).send(error);
   }
@@ -44,7 +49,6 @@ app.post("/signup", async (req: Request, res: Response) => {
     res.status(400).json({
       message: "Username or Password is empty",
     });
-  res.status(200).send(email);
 });
 
 app.post("/signin", async (req: Request, res: Response) => {
@@ -96,9 +100,9 @@ app.post("/create-room", middleAuth, async (req, res) => {
 });
 
 app.get("/allrooms", async (req, res) => {
-  const allrooms = await prismaClient.room.findMany()
-  res.json({allrooms,})
-})
+  const allrooms = await prismaClient.room.findMany();
+  res.json({ allrooms });
+});
 
 app.get("/chat/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
