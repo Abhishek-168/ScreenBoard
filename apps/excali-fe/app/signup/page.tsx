@@ -31,7 +31,7 @@ export default function Signup() {
   return (
     <>
       <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-        <div className="flex flex-col justify-between w-[50vw] h-auto gap-[3vw] p-4 pt-6 pb-10 border-0 rounded-xl border-gray-100 bg-gray-900">
+        <div className="flex flex-col justify-between w-[30vw] h-auto gap-[2vw] p-8 pt-6 pb-10 border-2 rounded-xl border-gray-100 bg-gray-900">
           <span className="text-center text-3xl font-boldonse"> Sign Up</span>
           <input
             type="text"

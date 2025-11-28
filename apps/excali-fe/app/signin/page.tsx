@@ -32,7 +32,7 @@ export default function Signup() {
   return (
     <>
       <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-        <div className="flex flex-col justify-between w-[30vw] h-auto gap-[2vw] p-6 border-2 rounded-xl border-gray-100 bg-gray-50">
+        <div className="flex flex-col justify-between w-[30vw] h-auto gap-[2vw] p-6 border-2 rounded-xl border-gray-100 bg-gray-900">
           <span className="text-center text-2xl"> Sign in</span>
           <input
             type="text"
@@ -40,6 +40,7 @@ export default function Signup() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+                  className="p-4 border-[0.5px] border-violet-800 rounded-xl"
           />
           <input
             type="password"
@@ -47,9 +48,10 @@ export default function Signup() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+                  className="p-4 border-[0.5px] border-violet-800 rounded-xl"
           />
           <button
-            className="bg-blue-700 p-2 ml-2 rounded-xl text-white"
+            className="bg-blue-700 p-4 ml-2 rounded-xl text-white cursor pointer"
             onClick={() => handleSubmit()}
           >
             {" "}

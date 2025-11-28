@@ -52,7 +52,9 @@ function HeroSection() {
   return (
     <>
       <div className="flex flex-col justify-between relative left-[10vw] top-[5vw] w-[35vw] h-[22vw]">
-        <span className="text-white text-[4.5em] leading-[1.15] tracking-tight overflow-clip font-boldonse text-shadow-amber-50">
+        <span className="text-white text-[4.6em] leading-[1.2] mt-5 mb-5 tracking-tight overflow-clip font-boldonse 
+                drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] 
+                hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.5)] transition-all duration-300">
           {" "}
           Real Time Collaborative Drawing Canvas{" "}
         </span>
@@ -68,7 +70,7 @@ function HeroSection() {
         </div>
       </div>
       <div className="absolute right-[19vw] top-[10vw] w-[18vw] h-[18vw]">
-        <VideoPlayer />
+        <VideoPlayer glow={true}/>
       </div>
       <div className="absolute right-[10vw] top-[19vw] w-[18vw] h-[18vw]">
         <VideoPlayer />
@@ -107,7 +109,7 @@ function Feature({ title }: { title: string }) {
           <div className="w-[3px] h-[9vw] bg-orange-400" />
 
           <div className="w-[13vw]">
-            <VideoPlayer />
+            <VideoPlayer glow={true} white={true}/>
           </div>
         </div>
 
@@ -129,7 +131,7 @@ function Feature({ title }: { title: string }) {
 function Footer() {
   return (
     <>
-      <footer className="mt-28 w-full backdrop-blur-lg bg-white/10 border-t border-white/20 shadow-lg">
+      <footer className="mt-28 w-full backdrop-blur-6xl bg-white/10 border-t border-white/20 shadow-lg">
         <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
           <div>
             <h2 className="text-xl font-semibold mb-4">Pages</h2>
@@ -162,7 +164,7 @@ function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/abhishek-jain-71879030b/"
                   target="_blank"
                   className="hover:text-gray-300 transition"
                 >
@@ -171,7 +173,7 @@ function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com"
+                  href="https://github.com/Abhishek-168"
                   target="_blank"
                   className="hover:text-gray-300 transition"
                 >
@@ -183,7 +185,7 @@ function Footer() {
         </div>
 
         <div className="text-center text-white/60 py-4 text-sm border-t border-white/10">
-          © 2025 Your Website Name. All rights reserved.
+          © 2025 SLATE. All rights reserved.
         </div>
       </footer>
     </>

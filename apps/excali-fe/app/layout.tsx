@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Excalidraw",
+  title: "SLATE",
   description: "The real time drawing platform",
 };
 
