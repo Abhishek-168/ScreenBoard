@@ -5,14 +5,19 @@ export default function Home() {
   return (
     <>
       <img
-        src="./main.jpg"
+        src="./glow-ctr.png"
         alt="backgorund-img"
-        className="absolute -z-10 "
+        className="absolute -z-10 w-screen opacity-99"
+      />
+      <img
+        src="./glow-footer.png"
+        alt=""
+        className="w-screen absolute -z-10 top-[150vh]"
       />
       <NavBar />
       <HeroSection />
       <CoreFeatures />
-      <img src="./footer-img.jpg" alt="" className="w-screen absolute -z-10 -mt-[15vw]" />
+      <Footer />
     </>
   );
 }
@@ -81,26 +86,23 @@ function CoreFeatures() {
           Our Core Features{" "}
         </span>
         <div>
-          <Feature title="Modern Drawing Canvas"/>
+          <Feature title="Modern Drawing Canvas" />
         </div>
         <div>
-          <Feature title="Synched Collaborative Canvas"/>
+          <Feature title="Synched Collaborative Canvas" />
         </div>
         <div>
-          <Feature title="Create Rooms Public or Private"/>     
+          <Feature title="Create Rooms Public or Private" />
         </div>
       </div>
     </>
   );
 }
 
-function Feature( {title } : {
-  title : string
-}) {
+function Feature({ title }: { title: string }) {
   return (
     <>
       <div className="flex items-center p-8 w-[70vw] mx-auto rounded-xl gap-10 pl-[4vw] mt-[1.6vw]">
-
         <div className="flex items-center gap-10">
           <div className="w-[3px] h-[9vw] bg-orange-400" />
 
@@ -109,11 +111,8 @@ function Feature( {title } : {
           </div>
         </div>
 
-
         <div className="flex flex-col max-w-[37vw] ml-[4vw]">
-          <h2 className="text-3xl font-boldonse text-white">
-            {title}
-          </h2>
+          <h2 className="text-3xl font-boldonse text-white">{title}</h2>
           <p className="text-white mt-2 text-sm leading-relaxed">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
             temporibus, doloremque accusantium amet animi provident. Quos quasi
@@ -123,6 +122,70 @@ function Feature( {title } : {
           </p>
         </div>
       </div>
+    </>
+  );
+}
+
+function Footer() {
+  return (
+    <>
+      <footer className="mt-28 w-full backdrop-blur-lg bg-white/10 border-t border-white/20 shadow-lg">
+        <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Pages</h2>
+            <ul className="space-y-2">
+              <li>
+                <a href="/home" className="hover:text-gray-300 transition">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="/about" className="hover:text-gray-300 transition">
+                  About
+                </a>
+              </li>
+              <li>
+                <a href="/canvas" className="hover:text-gray-300 transition">
+                  Canvas
+                </a>
+              </li>
+              <li>
+                <a href="/rooms" className="hover:text-gray-300 transition">
+                  Rooms
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Contact</h2>
+            <ul className="space-y-2">
+              <li>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  className="hover:text-gray-300 transition"
+                >
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  className="hover:text-gray-300 transition"
+                >
+                  GitHub
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="text-center text-white/60 py-4 text-sm border-t border-white/10">
+          © 2025 Your Website Name. All rights reserved.
+        </div>
+      </footer>
     </>
   );
 }
