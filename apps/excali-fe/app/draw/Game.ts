@@ -81,12 +81,57 @@ export class Game {
     this.ctx.strokeStyle = "white";
     this.ctx.lineWidth = 2;
   }
+  strokeRoundRect(
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) {
+  // Normalize negative sizes
+  if (width < 0) {
+    x += width;
+    width = -width;
+  }
+  if (height < 0) {
+    y += height;
+    height = -height;
+  }
+
+  const r = Math.min(10, width / 2, height / 2);
+
+  const x0 = x;
+  const x1 = x + r;
+  const x2 = x + width - r;
+  const x3 = x + width;
+
+  const y0 = y;
+  const y1 = y + r;
+  const y2 = y + height - r;
+  const y3 = y + height;
+
+  const ctx = this.ctx;
+
+  ctx.beginPath();
+  ctx.moveTo(x1, y0);
+  ctx.lineTo(x2, y0);
+  ctx.arcTo(x3, y0, x3, y1, r);
+  ctx.lineTo(x3, y2);
+  ctx.arcTo(x3, y3, x2, y3, r);
+  ctx.lineTo(x1, y3);
+  ctx.arcTo(x0, y3, x0, y2, r);
+  ctx.lineTo(x0, y1);
+  ctx.arcTo(x0, y0, x1, y0, r);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+
   clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     this.existingShapes.map((shape) => {
       if (shape.type == "rect") {
-        this.ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
+        this.strokeRoundRect(shape.x, shape.y, shape.width, shape.height);
       } else if (shape.type == "circle") {
         this.ctx.beginPath();
         this.ctx.arc(shape.x, shape.y, Math.abs(shape.radius), 0, Math.PI * 2);
@@ -190,7 +235,7 @@ export class Game {
       if (this.selectedTool == "rect") {
         this.width = e.clientX - this.startX;
         this.height = e.clientY - this.startY;
-        this.ctx.strokeRect(this.startX, this.startY, this.width, this.height);
+        this.strokeRoundRect(this.startX, this.startY, this.width, this.height);
       } else if (this.selectedTool == "circle") {
         this.ctx.beginPath();
         const radius = e.clientY - this.startY;
