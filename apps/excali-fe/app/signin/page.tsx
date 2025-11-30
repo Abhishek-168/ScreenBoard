@@ -51,7 +51,7 @@ export default function Signup() {
                   className="p-4 border-[0.5px] border-violet-800 rounded-xl"
           />
           <button
-            className="bg-blue-700 p-4 ml-2 rounded-xl text-white cursor pointer"
+            className="bg-blue-700 p-4 ml-2 rounded-xl text-white cursor-pointer"
             onClick={() => handleSubmit()}
           >
             {" "}

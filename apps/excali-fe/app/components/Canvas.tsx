@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 // import { initDraw } from "../draw";
 import { Game } from "../draw/Game";
-export type Tool = "circle" | "rect" | "sqaure" | "line";
+export type Tool = "circle" | "rect" | "square" | "line" | "select";
 
 export default function Canvas({
   roomId,
@@ -56,7 +56,7 @@ export default function Canvas({
           </button>
           <button
             className="cursor-pointer p-2 hover:bg-gray-500 rounded-md"
-            onClick={() => setSelectedTool("sqaure")}
+            onClick={() => setSelectedTool("square")}
           >
             {" "}
             Square{" "}
@@ -67,6 +67,13 @@ export default function Canvas({
           >
             {" "}
             Line{" "}
+          </button>
+           <button
+            className="cursor-pointer p-2 hover:bg-gray-500 rounded-md"
+            onClick={() => setSelectedTool("select")}
+          >
+            {" "}
+            Select{" "}
           </button>
         </div>
       </div>

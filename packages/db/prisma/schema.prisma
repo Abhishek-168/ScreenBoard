@@ -28,6 +28,7 @@ model Room {
 
 model Chat {
   id      String @id @default(uuid())
+  fid     String @unique
   roomId  Int
   userId  String
   message String
