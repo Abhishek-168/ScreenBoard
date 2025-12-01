@@ -135,44 +135,45 @@ export class Game {
     });
   }
 
-initHandlers() {
-  this.socket.onmessage = (event) => {
-    console.log("raw event data: ", event.data);
-    const mssg = JSON.parse(event.data);
+  initHandlers() {
+    this.socket.onmessage = (event) => {
+      console.log("raw event data: ", event.data);
+      const mssg = JSON.parse(event.data);
 
-    // helper to upsert incoming shape into this.existingShapes
-    const upsertIncomingShape = (incoming: any) => {
-      if (!incoming || !incoming.shape || !incoming.shape.id) return;
-      const incomingShape = incoming.shape;
-      const idx = this.existingShapes.findIndex((s) => s.id === incomingShape.id);
-      if (idx !== -1) {
-        // replace existing
-        this.existingShapes[idx] = incomingShape;
-      } else {
-        // add new
-        this.existingShapes.push(incomingShape);
+      // helper to upsert incoming shape into this.existingShapes
+      const upsertIncomingShape = (incoming: any) => {
+        if (!incoming || !incoming.shape || !incoming.shape.id) return;
+        const incomingShape = incoming.shape;
+        const idx = this.existingShapes.findIndex(
+          (s) => s.id === incomingShape.id
+        );
+        if (idx !== -1) {
+          // replace existing
+          this.existingShapes[idx] = incomingShape;
+        } else {
+          // add new
+          this.existingShapes.push(incomingShape);
+        }
+      };
+
+      if (mssg.type == "chat") {
+        const message = JSON.parse(mssg.message);
+
+        console.log("New shape received (chat):", message);
+
+        // Upsert instead of blindly pushing to avoid duplicates
+        upsertIncomingShape(message);
+        this.clearCanvas();
+      } else if (mssg.type == "update-shape") {
+        const message = JSON.parse(mssg.message);
+        console.log("Updated shape received:", message);
+
+        // Replace the existing one (or add if missing)
+        upsertIncomingShape(message);
+        this.clearCanvas();
       }
     };
-
-    if (mssg.type == "chat") {
-      const message = JSON.parse(mssg.message);
-
-      console.log("New shape received (chat):", message);
-
-      // Upsert instead of blindly pushing to avoid duplicates
-      upsertIncomingShape(message);
-      this.clearCanvas();
-    } else if (mssg.type == "update-shape") {
-      const message = JSON.parse(mssg.message);
-      console.log("Updated shape received:", message);
-
-      // Replace the existing one (or add if missing)
-      upsertIncomingShape(message);
-      this.clearCanvas();
-    }
-  };
-}
-
+  }
 
   isEnclosedBySelect(x: number, y: number, shape: Shape): boolean {
     if (shape.type == "rect") {
@@ -182,6 +183,27 @@ initHandlers() {
         y >= shape.y &&
         y <= shape.y + shape.height
       );
+    } else if (shape.type == "circle") {
+      return (
+        x >= shape.x &&
+        x <= shape.x + shape.radius &&
+        y >= shape.y &&
+        y <= shape.y + shape.radius
+      );
+    } else if (shape.type == "square") {
+      return (
+        x >= shape.x &&
+        x <= shape.x + shape.length &&
+        y >= shape.y &&
+        y <= shape.y + shape.length
+      );
+    } else if (shape.type == "line") {
+      return (
+        x >= shape.x &&
+        x <= shape.endX &&
+        y >= shape.y &&
+        y <= shape.endY
+      )
     }
     return false;
   }
@@ -380,11 +402,10 @@ initHandlers() {
   handleMouseMove = (e: MouseEvent) => {
     // cursor aesthetics
     if (this.selectedTool === "select" && this.elementClicked) {
-    this.canvas.style.cursor = "move";
-  } else {
-    this.canvas.style.cursor = "default";
-  }
-
+      this.canvas.style.cursor = "move";
+    } else {
+      this.canvas.style.cursor = "default";
+    }
 
     if (this.clicked) {
       console.log("tool is " + this.selectedTool);
@@ -423,48 +444,67 @@ initHandlers() {
         this.elementClicked &&
         this.selectedElement
       ) {
+        const dx = e.clientX - this.startX;
+        const dy = e.clientY - this.startY;
+        const origX =
+          (this.selectedElement as any).__origX ?? this.selectedElement.x;
+        const origY =
+          (this.selectedElement as any).__origY ?? this.selectedElement.y;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        for (const shape of this.existingShapes) {
+          // skip the dragged shape to avoid drawing original + preview
+          if (shape.id == this.selectedElement.id) continue;
 
-        if (this.selectedElement.type == "rect") {
-          // this.width = e.clientX - this.startX;
-          // this.height = e.clientY - this.startY;
-          const dx = e.clientX - this.startX;
-          const dy = e.clientY - this.startY;
-          const origX =
-            (this.selectedElement as any).__origX ?? this.selectedElement.x;
-          const origY =
-            (this.selectedElement as any).__origY ?? this.selectedElement.y;
-          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-          for (const shape of this.existingShapes) {
-            // skip the dragged shape to avoid drawing original + preview
-            if (shape.id == this.selectedElement.id) continue;
-
-            if (shape.type === "rect") {
-              this.strokeRoundRect(shape.x, shape.y, shape.width, shape.height);
-            } else if (shape.type === "circle") {
-              this.ctx.beginPath();
-              this.ctx.arc(
-                shape.x,
-                shape.y,
-                Math.abs(shape.radius),
-                0,
-                Math.PI * 2
-              );
-              this.ctx.stroke();
-            } else if (shape.type === "line") {
-              this.ctx.beginPath();
-              this.ctx.moveTo(shape.x, shape.y);
-              this.ctx.lineTo(shape.endX, shape.endY);
-              this.ctx.stroke();
-            } else if (shape.type === "square") {
-              this.ctx.strokeRect(shape.x, shape.y, shape.length, shape.length);
-            }
+          if (shape.type === "rect") {
+            this.strokeRoundRect(shape.x, shape.y, shape.width, shape.height);
+          } else if (shape.type === "circle") {
+            this.ctx.beginPath();
+            this.ctx.arc(
+              shape.x,
+              shape.y,
+              Math.abs(shape.radius),
+              0,
+              Math.PI * 2
+            );
+            this.ctx.stroke();
+          } else if (shape.type === "line") {
+            this.ctx.beginPath();
+            this.ctx.moveTo(shape.x, shape.y);
+            this.ctx.lineTo(shape.endX, shape.endY);
+            this.ctx.stroke();
+          } else if (shape.type === "square") {
+            this.ctx.strokeRect(shape.x, shape.y, shape.length, shape.length);
           }
+        }
+        if (this.selectedElement.type == "rect") {
           this.strokeRoundRect(
             origX + dx,
             origY + dy,
             this.selectedElement.width,
             this.selectedElement.height
           );
+        } else if (this.selectedElement.type == "circle") {
+          this.ctx.beginPath();
+            this.ctx.arc(
+              origX + dx,
+              origY + dy,
+              Math.abs(this.selectedElement.radius),
+              0,
+              Math.PI * 2
+            );
+            this.ctx.stroke();
+        } else if (this.selectedElement.type == "square") {
+          this.ctx.strokeRect(
+            origX + dx,
+            origY + dy,
+            this.selectedElement.length,
+            this.selectedElement.length
+          );
+        } else if (this.selectedElement.type == "line") {
+          this.ctx.beginPath();
+          this.ctx.moveTo(origX + dx, origY + dy);
+          this.ctx.lineTo(dx + this.selectedElement.endX, dy + this.selectedElement.endY);
+          this.ctx.stroke();
         }
       }
     }
