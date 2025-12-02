@@ -7,6 +7,7 @@ import TopRooms from "../top_rooms/page";
 import axios from "axios";
 import  { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
+import NavBar from "../components/NavBar";
 
 export default function Room() {
   const [topRooms, setTopRooms] = useState<Boolean>(true);
@@ -36,6 +37,7 @@ export default function Room() {
   };
   return (
     <>
+    <NavBar />
       <div className="flex justify-around w-[80vw] m-[5vw] border-b-blue-700">
         <input
           type="text"
