@@ -27,13 +27,13 @@ export default function TopRooms() {
 
   return (
     <>
-       <section>
-      <h3 className="mb-2">Trending Rooms</h3>
-      <div className="space-y-3">
+      <section>
+      <h3 className="text-2xl">Trending Rooms</h3>
+      <div className="bg-green-500">
         {allRooms.map((room: Room) => (
           <div
             key={room.id}
-            className="border-amber-600 w-[90vw] h-[12vw] ml-[5vw] mr-[5vw] p-[2vw] flex justify-between items-center"
+            className="border-amber-600 max-w-[90vw] h-[12vw] p-[2vw] flex justify-between items-center"
           >
             <span>{room.name}</span>
             <button
