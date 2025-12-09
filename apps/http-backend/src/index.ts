@@ -100,9 +100,15 @@ app.post("/create-room", middleAuth, async (req, res) => {
 });
 
 app.get("/allrooms", async (req, res) => {
-  const allrooms = await prismaClient.room.findMany();
-  res.json({ allrooms });
+  try {
+    const allrooms = await prismaClient.room.findMany();
+    res.json({ allrooms });
+  } catch (err) {
+    console.error('DB error fetching allrooms:', err);
+    res.status(500).json({ error: 'Database error', details: err instanceof Error ? err.message : String(err) });
+  }
 });
+
 
 app.get("/chat/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
