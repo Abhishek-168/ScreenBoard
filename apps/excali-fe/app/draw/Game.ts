@@ -73,7 +73,7 @@ export class Game {
     this.clearCanvas();
 
     this.ctx.strokeStyle = "white";
-    this.ctx.lineWidth = 2;
+    this.ctx.lineWidth = 1.1;
   }
   strokeRoundRect(x: number, y: number, width: number, height: number) {
     // Normalize negative sizes

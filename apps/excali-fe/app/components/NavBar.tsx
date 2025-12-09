@@ -4,8 +4,8 @@ import Link from "next/link";
 export default function NavBar() {
     return (
         <>
-            <div className="flex justify-between items-center h-[4vw] bg-gray-900 text-white pl-[2vw] pr-[2vw]">
-                <span>
+            <div className="flex justify-between items-center h-[4vw] bg-black text-white pl-[2vw] pr-[2vw] border-b-[0.8px] border-gray-600">
+                <span className="text-2xl">
                     Excalidraw
                 </span>
                 <div className="flex max-w-[20vw] w-[15vw] bg-pink-700 justify-around">

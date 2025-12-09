@@ -10,8 +10,8 @@ export default function VideoPlayer({ glow = false, white = false }: VideoPlayer
     <div className={`relative ${glow ? 'p-2' : ''}`}>
       {/* Golden glow effect overlay */}
       {glow && (
-        <div className={`absolute inset-0 rounded-4xl bg-linear-to-br ${white ? 'from-white/20' : 'from-amber-400/30'} ${white ? 'via-transparent' : 'via-yellow-200/10'} to-transparent 
-                      blur-sm -z-10 scale-105`} />
+        <div className={`absolute inset-0 rounded-4xl bg-linear-to-br ${white ? 'from-white/40' : 'from-amber-400/30'} ${white ? 'via-transparent' : 'via-yellow-200/10'} to-transparent 
+                      blur-xl -z-10 scale-105`} />
       )}
       
       <video 

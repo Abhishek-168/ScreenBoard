@@ -7,11 +7,12 @@ import { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
 import LeftBar from "../components/LeftBar";
 import NavBar from "../components/NavBar";
+import { RoomCard } from "../components/RoomCard";
 
 export default function Room() {
   const [topRooms, setTopRooms] = useState<boolean>(true);
   const [roomName, setRoomName] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<string | null>(null);
+  const [searchResult, setSearchResult] = useState<{ id: string; name: string } | null>(null);
   const router = useRouter();
 
   const handleSearch = async () => {
@@ -29,7 +30,7 @@ export default function Room() {
         return;
       } else {
         // ensure id is a string (convert if needed)
-        setSearchResult(String(data.id));
+        setSearchResult({ id: String(data.id), name: data.name });
         console.log("search result is " + data.id);
       }
     } catch (err) {
@@ -45,7 +46,7 @@ export default function Room() {
     <>
       <div className="flex">
         <LeftBar />
-        <div className="flex-1 ml-[8vw]">
+        <div className="flex-1 ml-[7vw]">
           <NavBar />
           <MainHeroSection
             roomName={roomName}
@@ -70,7 +71,7 @@ interface MainHeroSectionProps {
   handleSearch: () => Promise<void> | void;
   handleRoomCreate: () => void;
   topRooms: boolean;
-  searchResult: string | null;
+  searchResult: { id: string; name: string } | null;
   router:  any; // use `any` if AppRouterInstance isn't available
 }
 
@@ -84,30 +85,27 @@ function MainHeroSection({
   router,
 }: MainHeroSectionProps) {
   return (
-    <div>
-      <div className="flex justify-around border-b-blue-700">
-        <input
-          type="text"
-          placeholder="Enter room name"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
-          className="border px-2 py-1"
-        />
-        <button className="cursor-pointer" onClick={() => handleSearch()}>
-          Search
-        </button>
-        <button onClick={() => handleRoomCreate()}>Create Room</button>
+    <div className="pl-8 max-w-[65vw] ">
+      <div className="flex border-b-blue-700 h-[4vw] mb-6 mt-8">
+        <div className="flex">
+          <input
+            type="text"
+            placeholder="Enter room name"
+            value={roomName}
+            onChange={(e) => setRoomName(e.target.value)}
+            className="border-2 border-gray-600 max-w-[40vw] w-[32vw] p-4 rounded-3xl focus:outline-none bg-[#181717]"
+          />
+          <img src="./search.svg" onClick={() => handleSearch()} alt="" className="w-[1.6vw] relative -left-[3vw]"/>
+        </div>
+        <div className=" w-[4vw] bg-[#181717] flex items-center rounded-[50%] justify-center cursor-pointer">
+          <img src="./plus-solid-full.svg" onClick={() => handleRoomCreate()} alt="" className="w-[2vw]"/>
+        </div>
       </div>
 
       {topRooms && <TopRooms />}
 
       {searchResult && (
-        <div className="border-amber-600 max-w-[90vw] h-[12vw] p-[2vw] flex justify-between">
-          <span>{roomName}</span>
-          <button onClick={() => router.push(`/canvas/${searchResult}`)}>
-            Enter
-          </button>
-        </div>
+        <RoomCard room={searchResult} />
       )}
     </div>
   );

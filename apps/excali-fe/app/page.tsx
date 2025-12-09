@@ -4,15 +4,11 @@ import VideoPlayer from "./videoPlayer";
 export default function Home() {
   return (
     <>
+      <img src="./glow-footer.png" alt="" className="w-screen absolute -z-10" />
       <img
         src="./glow-ctr.png"
         alt="backgorund-img"
-        className="absolute -z-10 w-screen opacity-99"
-      />
-      <img
-        src="./glow-footer.png"
-        alt=""
-        className="w-screen absolute -z-10 top-[150vh]"
+        className="absolute -z-10 w-screen top-[138vh]"
       />
       <NavBar />
       <HeroSection />
@@ -52,9 +48,11 @@ function HeroSection() {
   return (
     <>
       <div className="flex flex-col justify-between relative left-[10vw] top-[5vw] w-[35vw] h-[22vw]">
-        <span className="text-white text-[4.6em] leading-[1.2] mt-5 mb-5 tracking-tight overflow-clip font-boldonse 
+        <span
+          className="text-white text-[4.6em] leading-[1.2] mt-5 mb-5 tracking-tight overflow-clip font-boldonse 
                 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] 
-                hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.5)] transition-all duration-300">
+                hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.5)] transition-all duration-300"
+        >
           {" "}
           Real Time Collaborative Drawing Canvas{" "}
         </span>
@@ -70,7 +68,7 @@ function HeroSection() {
         </div>
       </div>
       <div className="absolute right-[19vw] top-[10vw] w-[18vw] h-[18vw]">
-        <VideoPlayer glow={true}/>
+        <VideoPlayer glow={true} />
       </div>
       <div className="absolute right-[10vw] top-[19vw] w-[18vw] h-[18vw]">
         <VideoPlayer />
@@ -109,7 +107,7 @@ function Feature({ title }: { title: string }) {
           <div className="w-[3px] h-[9vw] bg-orange-400" />
 
           <div className="w-[13vw]">
-            <VideoPlayer glow={true} white={true}/>
+            <VideoPlayer glow={true} white={true} />
           </div>
         </div>
 
@@ -131,7 +129,7 @@ function Feature({ title }: { title: string }) {
 function Footer() {
   return (
     <>
-      <footer className="mt-28 w-full backdrop-blur-6xl bg-white/10 border-t border-white/20 shadow-lg">
+      <footer className="mt-28 w-full backdrop-blur-2xl bg-white/10 border-t border-white/20 shadow-lg">
         <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
           <div>
             <h2 className="text-xl font-semibold mb-4">Pages</h2>

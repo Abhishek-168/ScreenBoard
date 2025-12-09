@@ -37,7 +37,7 @@ export default function Canvas({
           ref={canvasRef}
           width={window.innerWidth}
           height={window.innerHeight}
-          className="bg-black"
+          className="bg-[#121212] block"
         ></canvas>
         <div className="fixed top-[3vw] left-[3vw] gap-2 text-white z-10 bg-gray-600 p-2 rounded-md">
           <button
