@@ -24,7 +24,7 @@ function NavBar() {
           ScreenBoard
         </span>
       </div>
-      <div className="flex items-center justify-between w-[26vw]">
+      <div className="flex items-center justify-between w-[29vw]">
         <Link href="/github.com" className=" text-white cursor-pointer">
           Github
         </Link>
@@ -53,14 +53,16 @@ function NavBar() {
 function HeroSection() {
   return (
     <>
-      <div className="flex flex-col justify-between relative w-[46vw] h-[22vw] mt-[18vh] gap-2">
+      <div className="flex flex-col justify-between w-[43vw] h-[22vw] mt-[18vh] gap-2">
         <span className="text-white text-[4em] leading-18 font-boldonse">
           A Real-time canvas, <br />
           built for collaboration
+          <span className="inline-block w-[1vw] h-[1vw] bg-amber-400 ml-2"></span>
+          {/* <img src="./uni-shape.png" alt="" className="inline-block w-[2.2vw] ml-2 -mt-2"/> */}
         </span>
         <span className="text-gray-400 text-[1.5em]">
           Multiplayer drawing with live cursors, conflict-free updates, and
-          low-latency sync — ready for teams, classrooms, and creators
+          low-latency sync — ready for teams, classrooms, and creators.
         </span>
         <div className="flex pl-2">
           <Link
@@ -72,11 +74,27 @@ function HeroSection() {
           </Link>
           <Link
             href="/"
-            className="inline-block cursor-pointer px-6 py-2 text-amber-300 font-bold border border-amber-300 ml-6
-             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
+            className="inline-block cursor-pointer px-6 py-2 text-amber-300 border border-amber-300 ml-6
+             skew-x-[-20deg] shadow-md"
           >
             <span className="block skew-x-20">Guest Canvas</span>
           </Link>
+        </div>
+        <div className="absolute top-[5vw] -right-[4vw] ">
+          <img src="./dia-bg.png" alt="" className="w-[50vw]" />
+        </div>
+        <div className="absolute top-[4vw] right-[4vw] -rotate-45">
+          <img
+            src="./grid3.svg"
+            alt=""
+            className="w-[40vw]"
+            style={{
+              WebkitMaskImage:
+                "radial-gradient(circle, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 75%)",
+              maskImage:
+                "radial-gradient(circle, rgba(0,0,0,1) 45%, rgba(0,0,0,0) 75%)",
+            }}
+          />
         </div>
       </div>
     </>
