@@ -1,43 +1,49 @@
 import Link from "next/link";
 import VideoPlayer from "./videoPlayer";
+import "./globals.css";
 
 export default function Home() {
   return (
     <>
-      <img src="./glow-footer.png" alt="" className="w-screen absolute -z-10" />
-      <img
-        src="./glow-ctr.png"
-        alt="backgorund-img"
-        className="absolute -z-10 w-screen top-[138vh]"
-      />
-      <NavBar />
-      <HeroSection />
-      <CoreFeatures />
-      <Footer />
+      <img src="./testbg7.png" alt="" className="w-screen fixed -z-10" />
+      <div className="p-6 pl-20 pr-20">
+        <NavBar />
+        <HeroSection />
+        <CoreFeatures />
+        <Footer />
+      </div>
     </>
   );
 }
 
 function NavBar() {
   return (
-    <nav className="flex justify-between items-center h-[6vw] w-full p-4 pl-[10vw] pr-[10vw]">
+    <nav className="flex justify-between items-center h-[2.5vw] w-full ">
       <div>
-        <span className="text-3xl text-white font-mono">SLATE</span>
+        <span className="text-3xl text-white metal-mania-regular">
+          ScreenBoard
+        </span>
       </div>
-      <div>
-        <Link
-          href="/signin"
-          className="p-2 ml-2 rounded-xl text-white cursor-pointer "
-        >
-          {" "}
-          Sign in{" "}
+      <div className="flex items-center justify-between w-[26vw]">
+        <Link href="/github.com" className=" text-white cursor-pointer">
+          Github
+        </Link>
+        <Link href="/docs" className=" text-white cursor-pointer">
+          Docs
+        </Link>
+        <Link href="/trending" className=" text-white cursor-pointer">
+          Trending
         </Link>
         <Link
           href="/signup"
-          className=" p-2 ml-2 mr-2 rounded-xl text-white cursor-pointer"
+          className="inline-block cursor-pointer bg-amber-300 px-6 py-2 text-black font-bold
+             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
         >
-          {" "}
-          Sign up{" "}
+          <span className="block skew-x-20">Get Started</span>
+        </Link>
+
+        <Link href="/signin" className=" text-white cursor-pointer">
+          Log in
         </Link>
       </div>
     </nav>
@@ -47,31 +53,31 @@ function NavBar() {
 function HeroSection() {
   return (
     <>
-      <div className="flex flex-col justify-between relative left-[10vw] top-[5vw] w-[35vw] h-[22vw]">
-        <span
-          className="text-white text-[4.6em] leading-[1.2] mt-5 mb-5 tracking-tight overflow-clip font-boldonse 
-                drop-shadow-[0_0_8px_rgba(255,255,255,0.3)] 
-                hover:drop-shadow-[0_0_12px_rgba(255,255,255,0.5)] transition-all duration-300"
-        >
-          {" "}
-          Real Time Collaborative Drawing Canvas{" "}
+      <div className="flex flex-col justify-between relative w-[46vw] h-[22vw] mt-[18vh] gap-2">
+        <span className="text-white text-[4em] leading-18 font-boldonse">
+          A Real-time canvas, <br />
+          built for collaboration
         </span>
-        <div className="flex">
-          <button className="bg-cyan-600 text-white p-3 pl-4 pr-4 border-0 rounded-xl m-2 cursor-pointer">
-            {" "}
-            Get Started{" "}
-          </button>
-          <button className="bg-black text-white p-3 pl-4 pr-4 border-0 rounded-xl m-2 cursor-pointer">
-            {" "}
-            Guest Canvas{" "}
-          </button>
+        <span className="text-gray-400 text-[1.5em]">
+          Multiplayer drawing with live cursors, conflict-free updates, and
+          low-latency sync — ready for teams, classrooms, and creators
+        </span>
+        <div className="flex pl-2">
+          <Link
+            href="/signup"
+            className="inline-block cursor-pointer bg-amber-300 px-6 py-2 text-black font-bold
+             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
+          >
+            <span className="block skew-x-20">Get Started</span>
+          </Link>
+          <Link
+            href="/"
+            className="inline-block cursor-pointer px-6 py-2 text-amber-300 font-bold border border-amber-300 ml-6
+             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
+          >
+            <span className="block skew-x-20">Guest Canvas</span>
+          </Link>
         </div>
-      </div>
-      <div className="absolute right-[19vw] top-[10vw] w-[18vw] h-[18vw]">
-        <VideoPlayer glow={true} />
-      </div>
-      <div className="absolute right-[10vw] top-[19vw] w-[18vw] h-[18vw]">
-        <VideoPlayer />
       </div>
     </>
   );

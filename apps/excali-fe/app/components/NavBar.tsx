@@ -5,9 +5,9 @@ export default function NavBar() {
     return (
         <>
             <div className="flex justify-between items-center h-[4vw] bg-black text-white pl-[2vw] pr-[2vw] border-b-[0.8px] border-gray-600">
-                <span className="text-2xl">
+                <Link href="/" className="text-2xl">
                     Excalidraw
-                </span>
+                </Link >
                 <div className="flex max-w-[20vw] w-[15vw] bg-pink-700 justify-around">
                     <Link href="/"> Github </Link>
                     <Link href="/coffee"> Coffee </Link>

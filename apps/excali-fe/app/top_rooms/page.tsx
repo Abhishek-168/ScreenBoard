@@ -46,13 +46,13 @@ export default function TopRooms() {
 
   const scrollLeft = () => {
     if (containerRef.current) {
-      containerRef.current.scrollLeft -= 424;
+      containerRef.current.scrollLeft -= 550;
     }
   };
 
   const scrollRight = () => {
     if (containerRef.current) {
-      containerRef.current.scrollLeft += 424;
+      containerRef.current.scrollLeft += 550;
     }
   };
 
