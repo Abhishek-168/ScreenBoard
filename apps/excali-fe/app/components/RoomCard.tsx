@@ -19,7 +19,7 @@ export function RoomCard({ room }: RoomCardProps) {
   return (
     <div
       key={room.id}
-      className="min-w-[320px] flex-shrink-0 bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 flex flex-col gap-4 shadow-xl border border-slate-700/50 hover:border-amber-500/70 transition-all duration-300 hover:shadow-amber-500/10 group cursor-pointer"
+      className="min-w-[320px] shrink-0 bg-linear-to-br from-slate-800 to-slate-900 rounded-2xl p-6 flex flex-col gap-4 shadow-xl border border-slate-700/50 hover:border-amber-500/70 transition-all duration-300 hover:shadow-amber-500/10 group cursor-pointer"
       onClick={navigateToRoom}
     >
       <div className="flex justify-between items-start">

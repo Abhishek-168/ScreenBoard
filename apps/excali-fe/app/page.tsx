@@ -1,6 +1,8 @@
 import Link from "next/link";
 import VideoPlayer from "./videoPlayer";
 import "./globals.css";
+import TechCarousel from "./components/TechCarousel";
+
 
 export default function Home() {
   return (
@@ -9,6 +11,7 @@ export default function Home() {
       <div className="p-6 pl-20 pr-20">
         <NavBar />
         <HeroSection />
+        <TechCarousel />
         <CoreFeatures />
         <Footer />
       </div>
