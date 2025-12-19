@@ -56,14 +56,14 @@ function NavBar() {
 function HeroSection() {
   return (
     <>
-      <div className="flex flex-col justify-between w-[43vw] h-[22vw] mt-[18vh] gap-2">
+      <div className="flex flex-col justify-between w-[43vw] h-[22vw] mt-[18vh] gap-1">
         <span className="text-white text-[4em] leading-18 font-boldonse">
           A Real-time canvas, <br />
           built for collaboration
           <span className="inline-block w-[1vw] h-[1vw] bg-amber-400 ml-2"></span>
           {/* <img src="./uni-shape.png" alt="" className="inline-block w-[2.2vw] ml-2 -mt-2"/> */}
         </span>
-        <span className="text-gray-400 text-[1.5em]">
+        <span className="text-gray-400 text-[1.5em] -mt-4">
           Multiplayer drawing with live cursors, conflict-free updates, and
           low-latency sync — ready for teams, classrooms, and creators.
         </span>
