@@ -3,7 +3,6 @@ import VideoPlayer from "./videoPlayer";
 import "./globals.css";
 import TechCarousel from "./components/TechCarousel";
 
-
 export default function Home() {
   return (
     <>
@@ -85,7 +84,11 @@ function HeroSection() {
         </div>
         <div className="absolute top-[5vw] -right-[4vw] ">
           <img src="./dia-bg.png" alt="" className="w-[50vw]" />
-          <img src="./sparks.png" alt="" className="w-[9vw] absolute top-[3.7vw] left-[2vw] opacity-90" />
+          <img
+            src="./sparks.png"
+            alt=""
+            className="w-[9vw] absolute top-[3.7vw] left-[2vw] opacity-90"
+          />
         </div>
         <div className="absolute top-[4vw] right-[4vw] -rotate-45">
           <img
@@ -108,19 +111,27 @@ function HeroSection() {
 function CoreFeatures() {
   return (
     <>
-      <div className="w-[70vw] h-full bg-black text-white rounded-4xl ml-[15vw] mr-[15vw] mt-[20vw]">
-        <span className="relative flex justify-self-center p-4 text-4xl font-bold feat-class">
-          {" "}
-          Our Core Features{" "}
+      <div className="h-full text-white rounded-4xl relative">
+        <span className="relative pb-4 text-6xl font-boldonse z-10">
+          Our Core
         </span>
-        <div>
-          <Feature title="Modern Drawing Canvas" />
-        </div>
-        <div>
-          <Feature title="Synched Collaborative Canvas" />
-        </div>
-        <div>
-          <Feature title="Create Rooms Public or Private" />
+        <span className="relative pb-4 text-6xl font-boldonse -z-10">
+          {" "}
+          Featur
+        </span>
+        <span className="relative pb-4 text-6xl font-boldonse z-10">es</span>
+        <img src="./svgline.png" alt="" className="absolute -top-17 left-70" />
+        <img src="./sidesvg.png" alt="" className="absolute -left-16 top-0" />
+        <div className="pl-30">
+          <div>
+            <Feature title="Modern Drawing Canvas" />
+          </div>
+          <div>
+            <Feature title="Synched Collaborative Canvas" />
+          </div>
+          <div>
+            <Feature title="Create Rooms Public or Private" />
+          </div>
         </div>
       </div>
     </>
@@ -130,18 +141,16 @@ function CoreFeatures() {
 function Feature({ title }: { title: string }) {
   return (
     <>
-      <div className="flex items-center p-8 w-[70vw] mx-auto rounded-xl gap-10 pl-[4vw] mt-[1.6vw]">
+      <div className="flex items-center p-8 w-[70vw] mx-auto rounded-xl gap-10 pl-[4vw] mt-[1.4vw]">
         <div className="flex items-center gap-10">
-          <div className="w-[3px] h-[9vw] bg-orange-400" />
-
-          <div className="w-[13vw]">
-            <VideoPlayer glow={true} white={true} />
+          <div className="w-[15vw]">
+            <VideoPlayer />
           </div>
         </div>
 
         <div className="flex flex-col max-w-[37vw] ml-[4vw]">
-          <h2 className="text-3xl font-charlie text-white">{title}</h2>
-          <p className="text-white mt-2 text-sm leading-relaxed font-google-sans">
+          <h2 className="text-4xl font-charlie text-white">{title}</h2>
+          <p className="text-white mt-2 text-xl leading-relaxed font-sans text-justify">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
             temporibus, doloremque accusantium amet animi provident. Quos quasi
             nulla, doloremque quae! A eaque quos tempora adipisci, excepturi rem
@@ -157,7 +166,7 @@ function Feature({ title }: { title: string }) {
 function Footer() {
   return (
     <>
-      <footer className="mt-28 w-full backdrop-blur-2xl bg-white/10 border-t border-white/20 shadow-lg">
+      <footer className="mt-28 w-full backdrop-blur-2xl bg-white/5 border-t border-amber-300 shadow-lg">
         <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-2 gap-8 text-white">
           <div>
             <h2 className="text-xl font-semibold mb-4">Pages</h2>
@@ -211,7 +220,7 @@ function Footer() {
         </div>
 
         <div className="text-center text-white/60 py-4 text-sm border-t border-white/10">
-          © 2025 SLATE. All rights reserved.
+          © 2025 ScreenBoard. All rights reserved.
         </div>
       </footer>
     </>

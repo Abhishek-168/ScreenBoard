@@ -25,7 +25,7 @@ export default function TechCarousel() {
         <div className="ml-20 flex items-center gap-3 text-white text-2xl mb-4">
           {" "}
           <span className="inline-block w-[1vw] h-[1vw] bg-amber-400 ml-2"></span>
-          <span className="text-xl font-mono"> BUILT UPON </span>{" "}
+          <span className="text-xl font-mono"> BUILT WITH </span>{" "}
         </div>
       <div className="flex gap-8 pt-2 w-max animate-scroll hover:[animation-play-state:paused]">
         

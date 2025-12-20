@@ -25,7 +25,7 @@ const boldonse = Boldonse({
 });
 
 export const metadata: Metadata = {
-  title: "SLATE",
+  title: "ScreenBoard - Real-time Collaborative Drawing",
   description: "The real time drawing platform",
 };
 
