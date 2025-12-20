@@ -23,7 +23,7 @@ function NavBar() {
   return (
     <nav className="flex justify-between items-center h-[2.5vw] w-full ">
       <div>
-        <span className="text-3xl text-white metal-mania-regular">
+        <span className="text-3xl text-white font-finger-paint cursor-pointer">
           ScreenBoard
         </span>
       </div>
@@ -57,13 +57,13 @@ function HeroSection() {
   return (
     <>
       <div className="flex flex-col justify-between w-[43vw] h-[22vw] mt-[18vh] gap-1">
-        <span className="text-white text-[4em] leading-18 font-boldonse">
+        <span className="text-white text-[2.8em] font-boldonse leading-18">
           A Real-time canvas, <br />
           built for collaboration
           <span className="inline-block w-[1vw] h-[1vw] bg-amber-400 ml-2"></span>
           {/* <img src="./uni-shape.png" alt="" className="inline-block w-[2.2vw] ml-2 -mt-2"/> */}
         </span>
-        <span className="text-gray-400 text-[1.5em] -mt-4">
+        <span className="text-gray-400 font-sans text-[1.5em] -mt-4">
           Multiplayer drawing with live cursors, conflict-free updates, and
           low-latency sync — ready for teams, classrooms, and creators.
         </span>
@@ -85,6 +85,7 @@ function HeroSection() {
         </div>
         <div className="absolute top-[5vw] -right-[4vw] ">
           <img src="./dia-bg.png" alt="" className="w-[50vw]" />
+          <img src="./sparks.png" alt="" className="w-[9vw] absolute top-[3.7vw] left-[2vw] opacity-90" />
         </div>
         <div className="absolute top-[4vw] right-[4vw] -rotate-45">
           <img
@@ -139,8 +140,8 @@ function Feature({ title }: { title: string }) {
         </div>
 
         <div className="flex flex-col max-w-[37vw] ml-[4vw]">
-          <h2 className="text-3xl font-boldonse text-white">{title}</h2>
-          <p className="text-white mt-2 text-sm leading-relaxed">
+          <h2 className="text-3xl font-charlie text-white">{title}</h2>
+          <p className="text-white mt-2 text-sm leading-relaxed font-google-sans">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
             temporibus, doloremque accusantium amet animi provident. Quos quasi
             nulla, doloremque quae! A eaque quos tempora adipisci, excepturi rem

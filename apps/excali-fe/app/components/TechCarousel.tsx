@@ -22,14 +22,10 @@ const duplicatedPartners = [...partners, ...partners];
 export default function TechCarousel() {
   return (
     <div className="relative w-[60vw] overflow-hidden py-14 -ml-20">
-        <div className="ml-20">
+        <div className="ml-20 flex items-center gap-3 text-white text-2xl mb-4">
           {" "}
-          <img
-            src="./uni-shape.png"
-            alt=""
-            className="inline-block w-[2vw] pr-3"
-          />{" "}
-          <span className="text-xl"> BUILT UPON </span>{" "}
+          <span className="inline-block w-[1vw] h-[1vw] bg-amber-400 ml-2"></span>
+          <span className="text-xl font-mono"> BUILT UPON </span>{" "}
         </div>
       <div className="flex gap-8 pt-2 w-max animate-scroll hover:[animation-play-state:paused]">
         
@@ -39,7 +35,7 @@ export default function TechCarousel() {
             className="shrink-0 px-6 py-4 flex items-center gap-3 text-white/80 text-xl transition-transform hover:scale-105"
           >
             <img src="./uni-shape.png" className="w-5" />
-            {partner.name}
+            <span className="font-mono">{partner.name}</span>
           </div>
         ))}
       </div>

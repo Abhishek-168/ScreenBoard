@@ -1,13 +1,46 @@
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Finger+Paint&family=Boldonse&family=Lexend&family=Google+Sans&display=swap');
+
+/* Import Tailwind */
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Boldonse&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Kablammo&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap');
 
-
-.font-boldonse {
-  font-family: "Boldonse", sans-serif;
+/* Define CSS custom properties */
+:root {
+  --font-finger-paint: 'Finger Paint', 'system-ui', 'cursive';
+  --font-boldonse: 'Boldonse', 'system-ui', 'display';
+  --font-geom: 'Geom', 'system-ui', 'sans-serif';
+  --font-lexend: 'Lexend', 'system-ui', 'sans-serif';
+  --font-google-sans: 'Google Sans', 'system-ui', 'sans-serif';
 }
 
+@font-face {
+  font-family: 'charlie';
+  src: url('/fonts/charlie-display-bold.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-charlie {
+  font-family: 'charlie', sans-serif;
+}
+/* Create custom utility classes */
+.font-finger-paint {
+  font-family: var(--font-finger-paint);
+}
+
+.font-boldonse {
+  font-family: var(--font-boldonse);
+}
+.font-geom {
+  font-family: var(--font-geom);
+}
+.font-lexend {
+  font-family: var(--font-lexend);
+}
+.font-google-sans {
+  font-family: var(--font-google-sans);
+}
 /* Brave/Chrome/Safari/Edge */
 ::-webkit-scrollbar {
   display: none;
