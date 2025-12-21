@@ -30,16 +30,26 @@ export default function Signup() {
 
   return (
     <>
-      <div className="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-        <div className="flex flex-col justify-between w-[30vw] h-auto gap-[2vw] p-8 pt-6 pb-10 border-2 rounded-xl border-gray-100 bg-gray-900">
-          <span className="text-center text-3xl font-boldonse"> Sign Up</span>
+      <img src="./testbg7.png" alt="" className="w-screen fixed -z-10" />
+
+      <div className="absolute left-[50%] top-[45%] translate-x-[-50%] translate-y-[-50%]">
+        <img
+          src="./brightsparks.png"
+          alt=""
+          className="w-[7vw] relative top-15 -rotate-25 right-6"
+        />
+        <div className="flex flex-col justify-between w-[30vw] h-auto gap-[2vw] p-8 pt-6 pb-10 rounded-xl bg-gray-900">
+          <span className="text-center text-3xl font-charlie text-white">
+            {" "}
+            Sign Up{" "}
+          </span>
           <input
             type="text"
             placeholder="Name"
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-4 border-[0.5px] border-violet-800 rounded-xl"
+            className="p-4 border border-violet-800 focus:border-amber-300 autofill:bg-gray-900 outline-none rounded-xl "
           />
           <input
             type="text"
@@ -47,7 +57,7 @@ export default function Signup() {
             name="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-4 border-[0.5px] border-violet-800 rounded-xl"
+            className="p-4 border border-violet-800 focus:border-amber-300 autofill:bg-gray-900 outline-none rounded-xl"
           />
           <input
             type="password"
@@ -55,10 +65,10 @@ export default function Signup() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-4 border-[0.5px] border-violet-800 rounded-xl"
+            className="p-4 border border-violet-800 focus:border-amber-300 autofill:bg-gray-900 outline-none rounded-xl"
           />
           <button
-            className="bg-blue-700 p-4 cursor-pointer rounded-xl text-white"
+            className="bg-amber-300 p-4 cursor-pointer rounded-xl text-xl text-black font-charlie font-bold hover:bg-amber-400 transition"
             onClick={() => handleSubmit()}
           >
             {" "}
