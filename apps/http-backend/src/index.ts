@@ -109,6 +109,22 @@ app.get("/allrooms", async (req, res) => {
   }
 });
 
+app.get("/your-rooms", middleAuth, async (req, res) => {
+  //@ts-ignore
+  const userId = req.userId;  
+  try {
+    const yourrooms = await prismaClient.room.findMany({
+      where: {
+        adminId: userId,
+      },
+    });
+    res.json(yourrooms);
+  }
+  catch (err) {
+    console.error('DB error fetching yourrooms:', err);
+    res.status(500).json(err);
+  }
+});
 
 app.get("/chat/:roomId", async (req, res) => {
   const roomId = Number(req.params.roomId);
@@ -128,16 +144,24 @@ app.get("/chat/:roomId", async (req, res) => {
 
 app.get("/room/:slug", async (req, res) => {
   const slug = req.params.slug;
-  const room = await prismaClient.room.findFirst({
+  const room = await prismaClient.room.findMany({
     where: {
-      name: slug,
+      OR: [
+        {
+          name: {
+            contains: slug,
+            mode: 'insensitive',
+          },
+        },
+        {
+          id: slug && !isNaN(Number(slug)) ? Number(slug) : undefined,
+        },
+      ],
     },
   });
   console.log("Sending room data from BE");
-  console.log("data from be " + room);
-  res.json({
-    room,
-  });
+  console.log("data from be " , room);
+  res.json(room);
 });
 
 app.listen(3001);
