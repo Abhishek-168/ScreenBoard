@@ -59,7 +59,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
   };
 
   return (
-    <section className="mt-6 flex flex-col">
+    <section className="mt-10 flex flex-col">
       <div className="flex items-center justify-between">
         <h3 className="text-2xl font-bold">{title}</h3>
         <div className="flex gap-2">

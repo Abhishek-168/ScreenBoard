@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 export default function LeftBar() {
     return (
@@ -8,13 +9,11 @@ export default function LeftBar() {
                     {/* logo here */}
                 </div>
 
-  
-                <button className="p-3 rounded-2xl cursor-pointer" title="Profile">
+                <Link href="/profile" className="p-3 rounded-2xl cursor-pointer" title="Profile">
                     <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                </button>
-
+                </Link>
           
                 <button className="p-3 rounded-2xl cursor-pointer" title="Your Canvases">
                     <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

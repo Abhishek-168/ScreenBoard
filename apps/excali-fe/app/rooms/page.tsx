@@ -9,6 +9,7 @@ import LeftBar from "../components/LeftBar";
 import NavBar from "../components/NavBar";
 import RoomsCarousel from "../components/RoomsCarousel";
 import YourRooms from "../components/YourRooms";
+import Loader from "../components/Loader";
 
 type SearchResult = {
   id: string;
@@ -19,11 +20,17 @@ export default function Room() {
   const [topRooms, setTopRooms] = useState<boolean>(true);
   const [roomName, setRoomName] = useState<string>("");
   const [searchResult, setSearchResult] = useState<SearchResult[]>([null]);
+  const [loader, setLoader] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
-    if (!roomName) return;
+    if (!roomName) {
+      setTopRooms(true);
+      setSearchResult([null]);
+      return;
+    }
 
+    setLoader(true);
     const timeout = setTimeout(async () => {
       try {
         const resp = await axios.get(`${BE_URL}/room/${roomName}`, {
@@ -39,16 +46,18 @@ export default function Room() {
           return;
         } else {
           setTopRooms(false);
+          setLoader(false);
           setSearchResult(
             data.map((room: any) => ({
               id: String(room.id),
               name: room.name,
             }))
           );
-          console.log("search result is " + data.id);
+          console.log("search result is " , data.id);
         }
       } catch (err) {
         console.error("Search failed", err);
+        setLoader(false);
       }
     }, 500);
 
@@ -56,9 +65,10 @@ export default function Room() {
   }, [roomName]);
 
   const handleSearch = async () => {
+    if (!roomName) return;
     setTopRooms(false);
+    setLoader(true);
     try {
-      if (!roomName) return;
       const resp = await axios.get(`${BE_URL}/room/${roomName}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -71,16 +81,18 @@ export default function Room() {
         return;
       } else {
         // ensure id is a string (convert if needed)
+        setLoader(false);
         setSearchResult(
           data.map((room: any) => ({
             id: String(room.id),
             name: room.name,
           }))
         );
-        console.log("search result is " + data.id);
+        console.log("search result is " , data.id);
       }
     } catch (err) {
       console.error("Search failed", err);
+      setLoader(false);
     }
     console.log("search result is ", searchResult);
   };
@@ -103,6 +115,7 @@ export default function Room() {
             topRooms={topRooms}
             searchResult={searchResult}
             router={router}
+            loader={loader}
           />
         </div>
       </div>
@@ -120,6 +133,7 @@ interface MainHeroSectionProps {
   topRooms: boolean;
   searchResult: SearchResult[];
   router: any; // use `any` if AppRouterInstance isn't available
+  loader: boolean;
 }
 
 function MainHeroSection({
@@ -130,6 +144,7 @@ function MainHeroSection({
   topRooms,
   searchResult,
   router,
+  loader,
 }: MainHeroSectionProps) {
   return (
     <div className="pl-8 max-w-[65vw] ">
@@ -161,7 +176,9 @@ function MainHeroSection({
         </div>
       </div>
 
-      {!topRooms && (
+      {loader && !topRooms && <Loader title="Search Results" />}    
+
+      {!topRooms && !loader && (
         <RoomsCarousel
           rooms={searchResult.filter(
             (room): room is NonNullable<SearchResult> => room !== null
