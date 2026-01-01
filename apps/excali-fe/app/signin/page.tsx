@@ -4,6 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
+import Link from "next/dist/client/link";
+
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -64,6 +66,12 @@ export default function Signup() {
             {" "}
             Sign in{" "}
           </button>
+          <span className="text-center -mt-5">
+            Don't have an account?{" "}
+            <Link href="/signup" className="text-amber-300 hover:underline">
+              Sign up
+            </Link>
+          </span>
         </div>
       </div>
     </>

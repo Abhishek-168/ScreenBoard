@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { BE_URL } from "../config";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Signup() {
   const [name, setName] = useState("");
@@ -74,6 +75,12 @@ export default function Signup() {
             {" "}
             Sign up{" "}
           </button>
+          <span className="text-center">
+            Already have an account?{" "}
+            <Link href="/signin" className="text-amber-300 hover:underline">
+              Log in
+            </Link>
+          </span>
         </div>
       </div>
     </>

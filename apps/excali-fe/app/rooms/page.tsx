@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { use, useEffect } from "react";
 import { useState } from "react";
 import TopRooms from "../top_rooms/page";
 import axios from "axios";
@@ -7,35 +7,82 @@ import { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
 import LeftBar from "../components/LeftBar";
 import NavBar from "../components/NavBar";
-import { RoomCard } from "../components/RoomCard";
+import RoomsCarousel from "../components/RoomsCarousel";
+import YourRooms from "../components/YourRooms";
+
+type SearchResult = {
+  id: string;
+  name: string;
+} | null;
 
 export default function Room() {
   const [topRooms, setTopRooms] = useState<boolean>(true);
   const [roomName, setRoomName] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<{ id: string; name: string } | null>(null);
+  const [searchResult, setSearchResult] = useState<SearchResult[]>([null]);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!roomName) return;
+
+    const timeout = setTimeout(async () => {
+      try {
+        const resp = await axios.get(`${BE_URL}/room/${roomName}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        console.log("response is ", resp.data);
+        const data = resp.data;
+
+        if (!data) {
+          console.log("Room " + roomName + " not found");
+          return;
+        } else {
+          setTopRooms(false);
+          setSearchResult(
+            data.map((room: any) => ({
+              id: String(room.id),
+              name: room.name,
+            }))
+          );
+          console.log("search result is " + data.id);
+        }
+      } catch (err) {
+        console.error("Search failed", err);
+      }
+    }, 500);
+
+    return () => clearTimeout(timeout);
+  }, [roomName]);
 
   const handleSearch = async () => {
     setTopRooms(false);
     try {
+      if (!roomName) return;
       const resp = await axios.get(`${BE_URL}/room/${roomName}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-      const data = resp.data.room;
+      const data = resp.data;
       console.log("data is ", data);
       if (!data) {
         console.log("Room " + roomName + " not found");
         return;
       } else {
         // ensure id is a string (convert if needed)
-        setSearchResult({ id: String(data.id), name: data.name });
+        setSearchResult(
+          data.map((room: any) => ({
+            id: String(room.id),
+            name: room.name,
+          }))
+        );
         console.log("search result is " + data.id);
       }
     } catch (err) {
       console.error("Search failed", err);
     }
+    console.log("search result is ", searchResult);
   };
 
   const handleRoomCreate = () => {
@@ -46,7 +93,7 @@ export default function Room() {
     <>
       <div className="flex">
         <LeftBar />
-        <div className="flex-1 ml-[7vw]">
+        <div className="flex-1 ml-20">
           <NavBar />
           <MainHeroSection
             roomName={roomName}
@@ -71,8 +118,8 @@ interface MainHeroSectionProps {
   handleSearch: () => Promise<void> | void;
   handleRoomCreate: () => void;
   topRooms: boolean;
-  searchResult: { id: string; name: string } | null;
-  router:  any; // use `any` if AppRouterInstance isn't available
+  searchResult: SearchResult[];
+  router: any; // use `any` if AppRouterInstance isn't available
 }
 
 function MainHeroSection({
@@ -90,23 +137,40 @@ function MainHeroSection({
         <div className="flex">
           <input
             type="text"
-            placeholder="Enter room name"
+            placeholder="Search by room name or room id..."
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className="border-2 border-gray-600 max-w-[40vw] w-[32vw] p-4 rounded-3xl focus:outline-none bg-[#181717]"
+            className=" max-w-[60vw] w-[48vw] p-4 rounded-3xl focus:outline-none bg-[#0c0c0c] border-2 border-gray-600 text-white"
           />
-          <img src="./search.svg" onClick={() => handleSearch()} alt="" className="w-[1.6vw] relative -left-[3vw]"/>
+          <img
+            src="./search.svg"
+            onClick={() => handleSearch()}
+            alt=""
+            className="w-[1.6vw] relative -left-[3vw]"
+          />
         </div>
-        <div className=" w-[4vw] bg-[#181717] flex items-center rounded-[50%] justify-center cursor-pointer">
-          <img src="./plus-solid-full.svg" onClick={() => handleRoomCreate()} alt="" className="w-[2vw]"/>
+        <div className="group relative w-[14vw] cursor-pointer">
+          <div className="absolute -inset-0.5 bg-linear-to-r from-violet-600 to-fuchsia-600 rounded-3xl blur-sm opacity-75 group-hover:opacity-100 transition duration-300"></div>
+          <div
+            className="relative bg-[#181717] flex items-center rounded-3xl justify-center h-full"
+            onClick={() => handleRoomCreate()}
+          >
+            <img src="./plus-solid-full.svg" alt="" className="w-[2vw] mr-4" />
+            <span>Create Room</span>
+          </div>
         </div>
       </div>
 
-      {topRooms && <TopRooms />}
-
-      {searchResult && (
-        <RoomCard room={searchResult} />
+      {!topRooms && (
+        <RoomsCarousel
+          rooms={searchResult.filter(
+            (room): room is NonNullable<SearchResult> => room !== null
+          )}
+          title="Search Results"
+        />
       )}
+      {topRooms && <TopRooms />}
+      {topRooms && <YourRooms />}
     </div>
   );
 }
