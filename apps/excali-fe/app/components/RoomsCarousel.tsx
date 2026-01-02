@@ -38,22 +38,18 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
 
   const scrollLeft = () => {
     if (containerRef.current) {
-      containerRef.current.scrollLeft -= 550;
+      containerRef.current.scrollBy({
+        left: -550,
+        behavior: "smooth"
+      });
     }
   };
 
   const scrollRight = () => {
     if (containerRef.current) {
-      containerRef.current.scrollLeft += 550;
-    }
-  };
-
-  const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
-    if (containerRef.current && e.deltaY !== 0) {
-      e.preventDefault();
       containerRef.current.scrollBy({
-        left: e.deltaY * 2,
-        behavior: "smooth",
+        left: 550,
+        behavior: "smooth"
       });
     }
   };
@@ -118,8 +114,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
       <div className="mt-4">
         <div
           ref={containerRef}
-          onWheel={handleWheel}
-          className="flex flex-row gap-6 overflow-x-auto overflow-y-hidden pb-4 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-900"
+          className="flex flex-row gap-6 overflow-x-hidden overflow-y-hidden pb-4"
         >
           {rooms.map((room: Room) => (
             <RoomCard key={room.id} room={room} />

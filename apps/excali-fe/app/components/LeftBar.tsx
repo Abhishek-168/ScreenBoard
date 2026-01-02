@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function LeftBar() {
     return (
         <>
-            <div className="w-20 h-screen bg-linear-to-b from-slate-900 to-slate-950 flex flex-col gap-2 items-center py-6 fixed border-r border-slate-800/50 backdrop-blur-sm">
+            <div className="w-[5vw] h-screen bg-linear-to-b from-slate-900 to-slate-950 flex flex-col gap-2 items-center py-6 fixed border-r border-slate-800/50 backdrop-blur-sm">
 
                 <div className="mb-6 p-2 bg-linear-to-br from-violet-600 to-fuchsia-600 rounded-2xl shadow-lg shadow-violet-500/25">
                     {/* logo here */}

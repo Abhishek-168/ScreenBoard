@@ -10,6 +10,7 @@ import NavBar from "../components/NavBar";
 import RoomsCarousel from "../components/RoomsCarousel";
 import YourRooms from "../components/YourRooms";
 import Loader from "../components/Loader";
+import RightBar from "../components/RightBar";
 
 type SearchResult = {
   id: string;
@@ -53,7 +54,7 @@ export default function Room() {
               name: room.name,
             }))
           );
-          console.log("search result is " , data.id);
+          console.log("search result is ", data.id);
         }
       } catch (err) {
         console.error("Search failed", err);
@@ -88,7 +89,7 @@ export default function Room() {
             name: room.name,
           }))
         );
-        console.log("search result is " , data.id);
+        console.log("search result is ", data.id);
       }
     } catch (err) {
       console.error("Search failed", err);
@@ -105,25 +106,26 @@ export default function Room() {
     <>
       <div className="flex">
         <LeftBar />
-        <div className="flex-1 ml-20">
+        <div className="flex-1 ml-[5vw]">
           <NavBar />
-          <MainHeroSection
-            roomName={roomName}
-            setRoomName={setRoomName}
-            handleSearch={handleSearch}
-            handleRoomCreate={handleRoomCreate}
-            topRooms={topRooms}
-            searchResult={searchResult}
-            router={router}
-            loader={loader}
-          />
+          <div className="flex">
+            <MainHeroSection
+              roomName={roomName}
+              setRoomName={setRoomName}
+              handleSearch={handleSearch}
+              handleRoomCreate={handleRoomCreate}
+              topRooms={topRooms}
+              searchResult={searchResult}
+              router={router}
+              loader={loader}
+            />
+            <RightBar />
+          </div>
         </div>
       </div>
     </>
   );
 }
-
-/* ===== MainHeroSection component (typed props) ===== */
 
 interface MainHeroSectionProps {
   roomName: string;
@@ -147,7 +149,7 @@ function MainHeroSection({
   loader,
 }: MainHeroSectionProps) {
   return (
-    <div className="pl-8 max-w-[65vw] ">
+    <div className="pl-8 max-w-[70vw] ">
       <div className="flex border-b-blue-700 h-[4vw] mb-6 mt-8">
         <div className="flex">
           <input
@@ -155,7 +157,7 @@ function MainHeroSection({
             placeholder="Search by room name or room id..."
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className=" max-w-[60vw] w-[48vw] p-4 rounded-3xl focus:outline-none bg-[#0c0c0c] border-2 border-gray-600 text-white"
+            className=" max-w-[35vw] w-[35vw] p-4 rounded-3xl focus:outline-none bg-[#0c0c0c] border-2 border-gray-600 text-white"
           />
           <img
             src="./search.svg"
@@ -176,7 +178,7 @@ function MainHeroSection({
         </div>
       </div>
 
-      {loader && !topRooms && <Loader title="Search Results" />}    
+      {loader && !topRooms && <Loader title="Search Results" />}
 
       {!topRooms && !loader && (
         <RoomsCarousel
