@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NavBar() {
     return (
         <>
-            <nav className="relative flex justify-between items-center h-16 bg-linear-to-r from-slate-950 via-slate-900 to-slate-950 text-white px-8 border-b border-slate-800/50  z-50">
+            <nav className="fixed w-[95vw] flex justify-between items-center h-16 bg-linear-to-r from-slate-950 via-slate-900 to-slate-950 text-white px-8 border-b border-slate-800/50  z-50">
                
                 <Link 
                     href="/" 

@@ -11,6 +11,7 @@ import RoomsCarousel from "../components/RoomsCarousel";
 import YourRooms from "../components/YourRooms";
 import Loader from "../components/Loader";
 import RightBar from "../components/RightBar";
+import Community from "../components/Community";
 
 type SearchResult = {
   id: string;
@@ -108,7 +109,7 @@ export default function Room() {
         <LeftBar />
         <div className="flex-1 ml-[5vw]">
           <NavBar />
-          <div className="flex">
+          <div className="flex mt-16">
             <MainHeroSection
               roomName={roomName}
               setRoomName={setRoomName}
@@ -119,7 +120,11 @@ export default function Room() {
               router={router}
               loader={loader}
             />
-            <RightBar />
+            <div className="fixed right-0 flex-col">
+              <RightBar />
+              <Community />
+            </div>
+    
           </div>
         </div>
       </div>
@@ -149,32 +154,33 @@ function MainHeroSection({
   loader,
 }: MainHeroSectionProps) {
   return (
-    <div className="pl-8 max-w-[70vw] ">
-      <div className="flex border-b-blue-700 h-[4vw] mb-6 mt-8">
-        <div className="flex">
+    <div className="pl-8 max-w-[74vw] pr-4">
+      {/* Action Bar Container */}
+      <div className="flex items-center gap-4 mb-6 mt-8 p-2 pl-0 rounded-3xl backdrop-blur-sm w-fit">
+        {/* Search Section */}
+        <div className="flex items-center">
           <input
             type="text"
             placeholder="Search by room name or room id..."
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className=" max-w-[35vw] w-[35vw] p-4 rounded-3xl focus:outline-none bg-[#0c0c0c] border-2 border-gray-600 text-white"
+            className="w-[35vw] px-5 py-3.5 rounded-3xl focus:outline-none bg-slate-800/60 border border-slate-700/40 text-white placeholder:text-slate-500"
           />
           <img
             src="./search.svg"
             onClick={() => handleSearch()}
             alt=""
-            className="w-[1.6vw] relative -left-[3vw]"
+            className="w-[1.6vw] relative -left-[3vw] cursor-pointer"
           />
         </div>
-        <div className="group relative w-[14vw] cursor-pointer">
-          <div className="absolute -inset-0.5 bg-linear-to-r from-violet-600 to-fuchsia-600 rounded-3xl blur-sm opacity-75 group-hover:opacity-100 transition duration-300"></div>
-          <div
-            className="relative bg-[#181717] flex items-center rounded-3xl justify-center h-full"
-            onClick={() => handleRoomCreate()}
-          >
-            <img src="./plus-solid-full.svg" alt="" className="w-[2vw] mr-4" />
-            <span>Create Room</span>
-          </div>
+        
+        {/* Create Room Button */}
+        <div
+          className="cursor-pointer bg-amber-300 hover:bg-amber-400 flex items-center rounded-3xl justify-center px-6 py-3.5 transition-all duration-300"
+          onClick={() => handleRoomCreate()}
+        >
+          <img src="./plus-solid-full.svg" alt="" className="w-[1.2vw] mr-3 brightness-0" />
+          <span className="text-slate-900 font-medium">Create Room</span>
         </div>
       </div>
 

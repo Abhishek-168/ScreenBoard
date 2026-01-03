@@ -56,65 +56,63 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
 
   return (
     <section className="mt-10 flex flex-col">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-2xl font-bold">{title}</h3>
-        <div className="flex gap-2">
-          <button
-            onClick={scrollLeft}
-            disabled={!canScrollLeft}
-            className={`p-2 rounded-full shadow-lg transition-all duration-200 ${
-              canScrollLeft
-                ? "bg-slate-800 hover:bg-slate-700 cursor-pointer"
-                : "bg-slate-800/50 opacity-50 cursor-not-allowed"
-            }`}
-            title="Scroll left"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            onClick={scrollRight}
-            disabled={!canScrollRight}
-            className={`p-2 rounded-full shadow-lg transition-all duration-200 ${
-              canScrollRight
-                ? "bg-slate-800 hover:bg-slate-700 cursor-pointer"
-                : "bg-slate-800/50 opacity-50 cursor-not-allowed"
-            }`}
-            title="Scroll right"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
       </div>
-      <div className="mt-4">
+      <div className="relative group">
+        <button
+          onClick={scrollLeft}
+          disabled={!canScrollLeft}
+          className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-lg transition-all duration-300 ${
+            canScrollLeft
+              ? "bg-slate-800 hover:bg-slate-700 cursor-pointer opacity-0 group-hover:opacity-100"
+              : "bg-slate-800/50 opacity-0 cursor-not-allowed"
+          }`}
+          title="Scroll left"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <button
+          onClick={scrollRight}
+          disabled={!canScrollRight}
+          className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-lg transition-all duration-300 ${
+            canScrollRight
+              ? "bg-slate-800 hover:bg-slate-700 cursor-pointer opacity-0 group-hover:opacity-100"
+              : "bg-slate-800/50 opacity-0 cursor-not-allowed"
+          }`}
+          title="Scroll right"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
         <div
           ref={containerRef}
-          className="flex flex-row gap-6 overflow-x-hidden overflow-y-hidden pb-4"
+          className="flex flex-row gap-8 overflow-x-hidden overflow-y-hidden pb-4"
         >
           {rooms.map((room: Room) => (
             <RoomCard key={room.id} room={room} />
