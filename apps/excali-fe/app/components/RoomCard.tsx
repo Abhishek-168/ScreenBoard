@@ -17,14 +17,12 @@ export function RoomCard({ room }: RoomCardProps) {
 
   return (
     <div
-      onClick={navigateToRoom}
       className="
-        min-w-[340px] max-w-[340px] shrink-0 cursor-pointer
+        min-w-[340px] max-w-[340px] shrink-0 
         rounded-2xl p-5
         bg-slate-800/40
         border border-white/5
         transition-all duration-300
-        hover:translate-y-1 hover:shadow-[0_10px_28px_rgba(0,0,0,0.45)]
       "
     >
       {/* Header */}
@@ -74,6 +72,7 @@ export function RoomCard({ room }: RoomCardProps) {
           text-[#ffed00] text-sm font-semibold
           transition-colors
           flex items-center justify-center gap-2
+          cursor-pointer
         "
       >
         Join room →

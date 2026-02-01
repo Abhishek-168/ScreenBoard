@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export default function Community() {
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(true);
 
     const notifications = [
         { id: 1, content: <span><span className="text-slate-200 font-medium">@john_doe</span> mentioned you</span>, isNew: true },
