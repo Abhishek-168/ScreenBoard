@@ -12,6 +12,7 @@ import YourRooms from "../components/YourRooms";
 import Loader from "../components/Loader";
 import RightBar from "../components/RightBar";
 import Community from "../components/Community";
+import CreateRoomModal from "../components/create-modal";
 
 type SearchResult = {
   id: string;
@@ -24,6 +25,7 @@ export default function Room() {
   const [searchResult, setSearchResult] = useState<SearchResult[]>([null]);
   const [loader, setLoader] = useState<boolean>(false);
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     if (!roomName) {
@@ -53,7 +55,7 @@ export default function Room() {
             data.map((room: any) => ({
               id: String(room.id),
               name: room.name,
-            }))
+            })),
           );
           console.log("search result is ", data.id);
         }
@@ -88,7 +90,7 @@ export default function Room() {
           data.map((room: any) => ({
             id: String(room.id),
             name: room.name,
-          }))
+          })),
         );
         console.log("search result is ", data.id);
       }
@@ -100,7 +102,7 @@ export default function Room() {
   };
 
   const handleRoomCreate = () => {
-    router.push("/create-room");
+    setOpen(true);
   };
 
   return (
@@ -119,12 +121,13 @@ export default function Room() {
               searchResult={searchResult}
               router={router}
               loader={loader}
+              open={open}
+              setOpen={setOpen}
             />
             <div className="fixed right-0 flex-col">
               <RightBar />
               <Community />
             </div>
-    
           </div>
         </div>
       </div>
@@ -141,6 +144,8 @@ interface MainHeroSectionProps {
   searchResult: SearchResult[];
   router: any; // use `any` if AppRouterInstance isn't available
   loader: boolean;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function MainHeroSection({
@@ -152,6 +157,8 @@ function MainHeroSection({
   searchResult,
   router,
   loader,
+  open,
+  setOpen,
 }: MainHeroSectionProps) {
   return (
     <div className="pl-8 max-w-[74vw] pr-4">
@@ -173,13 +180,17 @@ function MainHeroSection({
             className="w-[1.6vw] relative -left-[3vw] cursor-pointer"
           />
         </div>
-        
+
         {/* Create Room Button */}
         <div
-          className="cursor-pointer bg-amber-300 hover:bg-amber-400 flex items-center rounded-3xl justify-center px-6 py-3.5 transition-all duration-300"
+          className="cursor-pointer bg-amber-300 hover:bg-amber-400 w-[11.3vw] flex justify-center px-5 py-3.5 rounded-3xl transition-all duration-300"
           onClick={() => handleRoomCreate()}
         >
-          <img src="./plus-solid-full.svg" alt="" className="w-[1.2vw] mr-3 brightness-0" />
+          <img
+            src="./plus-solid-full.svg"
+            alt=""
+            className="w-[1.5vw] mr-3 brightness-0"
+          />
           <span className="text-slate-900 font-medium">Create Room</span>
         </div>
       </div>
@@ -189,13 +200,19 @@ function MainHeroSection({
       {!topRooms && !loader && (
         <RoomsCarousel
           rooms={searchResult.filter(
-            (room): room is NonNullable<SearchResult> => room !== null
+            (room): room is NonNullable<SearchResult> => room !== null,
           )}
           title="Search Results"
         />
       )}
       {topRooms && <TopRooms />}
       {topRooms && <YourRooms />}
+
+       {open && (
+        <CreateRoomModal onClose={() => setOpen(false)} />
+      )}
+
     </div>
+    
   );
 }

@@ -33,7 +33,7 @@ export default function Signup() {
 
   return (
     <>
-          <img src="./testbg7.png" alt="" className="w-screen fixed -z-10" />
+      <img src="./testbg7.png" alt="" className="w-screen fixed -z-10" />
 
       <div className="absolute left-[50%] top-[45%] translate-x-[-50%] translate-y-[-50%]">
         <img

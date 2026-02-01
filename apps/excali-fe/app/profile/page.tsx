@@ -19,7 +19,7 @@ export default function Profile() {
 
 function ProfileContent() {
   return (
-    <div className="p-10 text-center text-2xl text-gray-500">
+    <div className="p-10 mt-16 text-center text-2xl text-gray-500">
       Profile Page - Coming Soon!
     </div>
   );
