@@ -30,6 +30,13 @@ type Shape =
       endX: number;
       endY: number;
       length: number;
+    })
+  | (BaseShape & {
+      type: "text";
+      x: number;
+      y: number;
+      text: string;
+      fontSize: number;
     });
 
 export class Game {
@@ -47,6 +54,14 @@ export class Game {
 
   private selectedElement: Shape | null = null;
   private elementClicked = false;
+  
+  private editingText: Shape | null = null;
+  private lastClickTime = 0;
+  private lastClickX = 0;
+  private lastClickY = 0;
+  private cursorVisible = true;
+  private cursorInterval: NodeJS.Timeout | null = null;
+  private cursorPosition = 0;
 
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     this.canvas = canvas;
@@ -57,12 +72,16 @@ export class Game {
     this.initDraw();
     this.initHandlers();
     this.initMouseHandlers();
+    this.initKeyboardHandlers();
   }
 
   destroy() {
     this.canvas.removeEventListener("mousedown", this.handleMouseDown);
     this.canvas.removeEventListener("mouseup", this.handleMouseUp);
     this.canvas.removeEventListener("mousemove", this.handleMouseMove);
+    this.canvas.removeEventListener("dblclick", this.handleDoubleClick);
+    document.removeEventListener("keydown", this.handleKeyDown);
+    this.stopCursorBlink();
   }
 
   setTool(tool: Tool) {
@@ -162,6 +181,19 @@ export class Game {
       );
     }
 
+    if (shape.type === "text") {
+      this.ctx.font = `${shape.fontSize}px Arial`;
+      const metrics = this.ctx.measureText(shape.text);
+      const textWidth = metrics.width;
+      const textHeight = shape.fontSize;
+      return (
+        x >= shape.x &&
+        x <= shape.x + textWidth &&
+        y >= shape.y - textHeight * 0.85 &&
+        y <= shape.y + textHeight * 0.25
+      );
+    }
+
     return false;
   }
 
@@ -209,6 +241,17 @@ export class Game {
         this.ctx.moveTo(shape.x, shape.y);
         this.ctx.lineTo(shape.endX, shape.endY);
         this.ctx.stroke();
+      } else if (shape.type === "text") {
+        this.ctx.font = `${shape.fontSize}px Arial`;
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(shape.text, shape.x, shape.y);
+        
+
+        if (this.editingText && this.editingText.id === shape.id && this.cursorVisible) {
+          const textBeforeCursor = shape.text.substring(0, this.cursorPosition);
+          const cursorX = shape.x + this.ctx.measureText(textBeforeCursor).width;
+          this.ctx.fillRect(cursorX, shape.y - shape.fontSize * 0.85, 2, shape.fontSize * 1.1);
+        }
       }
     }
   }
@@ -228,8 +271,37 @@ export class Game {
 
   handleMouseDown = (e: MouseEvent) => {
     const { x, y } = this.getCanvasCoords(e);
+    
+  
+    if (this.editingText) {
+      const el = this.getContainedElement(x, y);
+      if (!el || el.id !== this.editingText.id) {
+        this.finishTextEditing();
+      }
+    }
+    
     this.startX = x;
     this.startY = y;
+
+    
+    const now = Date.now();
+    const timeDiff = now - this.lastClickTime;
+    const distance = Math.hypot(x - this.lastClickX, y - this.lastClickY);
+    
+    if (timeDiff < 300 && distance < 10) {
+      this.handleDoubleClick(e);
+      this.lastClickTime = 0;
+      return;
+    }
+    
+    this.lastClickTime = now;
+    this.lastClickX = x;
+    this.lastClickY = y;
+
+    if (this.selectedTool === "text") {
+      this.createTextAtPosition(x, y);
+      return;
+    }
 
     if (this.selectedTool === "select") {
       const el = this.getContainedElement(x, y);
@@ -420,6 +492,10 @@ export class Game {
           this.ctx.moveTo(shape.x, shape.y);
           this.ctx.lineTo(shape.endX, shape.endY);
           this.ctx.stroke();
+        } else if (shape.type === "text") {
+          this.ctx.font = `${shape.fontSize}px Arial`;
+          this.ctx.fillStyle = "white";
+          this.ctx.fillText(shape.text, shape.x, shape.y);
         }
       }
 
@@ -444,6 +520,10 @@ export class Game {
         this.ctx.moveTo(origX + dx, origY + dy);
         this.ctx.lineTo(s.endX + dx, s.endY + dy);
         this.ctx.stroke();
+      } else if (s.type === "text") {
+        this.ctx.font = `${s.fontSize}px Arial`;
+        this.ctx.fillStyle = "white";
+        this.ctx.fillText(s.text, origX + dx, origY + dy);
       }
     }
   };
@@ -452,5 +532,167 @@ export class Game {
     this.canvas.addEventListener("mousedown", this.handleMouseDown);
     this.canvas.addEventListener("mouseup", this.handleMouseUp);
     this.canvas.addEventListener("mousemove", this.handleMouseMove);
+    this.canvas.addEventListener("dblclick", this.handleDoubleClick);
+  }
+
+  handleDoubleClick = (e: MouseEvent) => {
+    const { x, y } = this.getCanvasCoords(e);
+    const el = this.getContainedElement(x, y);
+    
+    if (el && el.type === "text") {
+      this.editText(el);
+    } else {
+      this.createTextAtPosition(x, y);
+    }
+  };
+
+  createTextAtPosition(x: number, y: number) {
+    const fontSize = 20;
+    const textShape: Shape = {
+      type: "text",
+      id: crypto.randomUUID(),
+      x,
+      y: y + fontSize, // Offset y by fontSize so text appears at click position
+      text: "",
+      fontSize: fontSize,
+    };
+    
+    this.editingText = textShape;
+    this.cursorPosition = 0;
+    this.existingShapes.push(textShape);
+    this.startCursorBlink();
+    this.clearCanvas();
+  }
+
+  editText(textShape: Shape & { type: "text" }) {
+    this.editingText = textShape;
+    this.cursorPosition = textShape.text.length;
+    this.startCursorBlink();
+    this.clearCanvas();
+  }
+
+  finishTextEditing() {
+    if (!this.editingText || this.editingText.type !== "text") return;
+    
+    const textShape = this.editingText;
+    const newText = textShape.text.trim();
+    
+    if (newText) {
+      const idx = this.existingShapes.findIndex((s) => s.id === textShape.id);
+      if (idx !== -1) {
+        this.existingShapes[idx] = textShape;
+      }
+      
+      this.socket.send(
+        JSON.stringify({
+          type: textShape.text === "" ? "chat" : "update-shape",
+          roomId: Number(this.roomId),
+          message: JSON.stringify({ shape: textShape }),
+          fid: textShape.id,
+        }),
+      );
+    } else {
+      // Remove empty text
+      const idx = this.existingShapes.findIndex((s) => s.id === textShape.id);
+      if (idx !== -1) {
+        this.existingShapes.splice(idx, 1);
+      }
+    }
+    
+    this.stopCursorBlink();
+    this.editingText = null;
+    this.clearCanvas();
+  }
+
+  startCursorBlink() {
+    this.stopCursorBlink();
+    this.cursorVisible = true;
+    this.cursorInterval = setInterval(() => {
+      this.cursorVisible = !this.cursorVisible;
+      this.clearCanvas();
+    }, 500);
+  }
+
+  stopCursorBlink() {
+    if (this.cursorInterval) {
+      clearInterval(this.cursorInterval);
+      this.cursorInterval = null;
+    }
+    this.cursorVisible = true;
+  }
+
+  handleKeyDown = (e: KeyboardEvent) => {
+    if (!this.editingText || this.editingText.type !== "text") return;
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      this.finishTextEditing();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+      if (idx !== -1 && this.editingText.text === "") {
+        this.existingShapes.splice(idx, 1);
+      }
+      this.stopCursorBlink();
+      this.editingText = null;
+      this.clearCanvas();
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      this.cursorPosition = Math.max(0, this.cursorPosition - 1);
+      this.clearCanvas();
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      this.cursorPosition = Math.min(this.editingText.text.length, this.cursorPosition + 1);
+      this.clearCanvas();
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      this.cursorPosition = 0;
+      this.clearCanvas();
+    } else if (e.key === "End") {
+      e.preventDefault();
+      this.cursorPosition = this.editingText.text.length;
+      this.clearCanvas();
+    } else if (e.key === "Backspace") {
+      e.preventDefault();
+      if (this.cursorPosition > 0) {
+        this.editingText.text = 
+          this.editingText.text.slice(0, this.cursorPosition - 1) + 
+          this.editingText.text.slice(this.cursorPosition);
+        this.cursorPosition--;
+        const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+        if (idx !== -1) {
+          this.existingShapes[idx] = { ...this.editingText };
+        }
+        this.clearCanvas();
+      }
+    } else if (e.key === "Delete") {
+      e.preventDefault();
+      if (this.cursorPosition < this.editingText.text.length) {
+        this.editingText.text = 
+          this.editingText.text.slice(0, this.cursorPosition) + 
+          this.editingText.text.slice(this.cursorPosition + 1);
+        const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+        if (idx !== -1) {
+          this.existingShapes[idx] = { ...this.editingText };
+        }
+        this.clearCanvas();
+      }
+    } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      e.preventDefault();
+      this.editingText.text = 
+        this.editingText.text.slice(0, this.cursorPosition) + 
+        e.key + 
+        this.editingText.text.slice(this.cursorPosition);
+      this.cursorPosition++;
+      const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+      if (idx !== -1) {
+        this.existingShapes[idx] = { ...this.editingText };
+      }
+      this.clearCanvas();
+    }
+  };
+
+  initKeyboardHandlers() {
+    document.addEventListener("keydown", this.handleKeyDown);
   }
 }

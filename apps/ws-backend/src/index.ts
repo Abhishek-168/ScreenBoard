@@ -61,7 +61,7 @@ wss.on("connection", function connection(ws, request) {
       const user = users.find((x) => x.ws == ws);
       if (!user) return;
 
-      // avoid duplicate rooms
+   
       if (!user.rooms.includes(parsedData.roomId)) {
         user.rooms.push(parsedData.roomId);
       }
@@ -73,29 +73,29 @@ wss.on("connection", function connection(ws, request) {
       user.rooms = user.rooms.filter((x) => x == parsedData.roomId);
     }
 
-    // === update-shape branch ===
+   
     if (parsedData.type === "update-shape") {
       try {
         const roomId = parsedData.roomId;
-        const message = parsedData.message; // may be string or object
+        const message = parsedData.message; 
         let fidValue = parsedData.fid != null ? String(parsedData.fid) : undefined;
 
         if (!fidValue) {
-          // fallback id if client didn't send one
+         
           fidValue = `${userId}-${Date.now()}`;
           console.warn("update-shape received without fid, generated fallback:", fidValue);
         }
 
-        // store/broadcast as a string so clients can JSON.parse(mssg.message)
+        
         const messageString = typeof message === "string" ? message : JSON.stringify(message);
 
-        // Upsert: update if exists, otherwise create (defence-in-depth)
+        
         await prismaClient.chat.upsert({
           where: { fid: fidValue },
           create: {
             roomId,
             message: messageString,
-            userId, // from outer scope (set when connection established)
+            userId,
             fid: fidValue,
           },
           update: {
@@ -103,13 +103,13 @@ wss.on("connection", function connection(ws, request) {
           },
         });
 
-        // Broadcast the updated shape to all users in the room
+       
         users.forEach((user) => {
           if (user.rooms.includes(roomId)) {
             user.ws.send(
               JSON.stringify({
-                type: "update-shape", // clients already listen for "chat"
-                message: messageString, // always a string now
+                type: "update-shape", 
+                message: messageString, 
                 roomId,
               })
             );
@@ -117,24 +117,24 @@ wss.on("connection", function connection(ws, request) {
         });
       } catch (err) {
         console.error("Failed to upsert/update shape:", err);
-        // Optionally, send an error back to the originating client
+        
         ws.send(
           JSON.stringify({ type: "error", message: "Failed to update shape" })
         );
       }
 
-      // handled, so return early
+   
       return;
     }
 
-    // === chat branch (create or update atomically) ===
+    
     if (parsedData.type == "chat") {
       const roomId = parsedData.roomId;
       const message = parsedData.message;
       let fidValue = parsedData.fid != null ? String(parsedData.fid) : undefined;
 
       if (!fidValue) {
-        // generate a fallback id if client didn't supply one (helps avoid null assertion)
+      
         fidValue = `${userId}-${Date.now()}`;
         console.warn("chat received without fid, generated fallback:", fidValue);
       }
@@ -142,7 +142,7 @@ wss.on("connection", function connection(ws, request) {
       const messageString = typeof message === "string" ? message : JSON.stringify(message);
 
       try {
-        // Use upsert to avoid P2002 and be idempotent
+       
         await prismaClient.chat.upsert({
           where: { fid: fidValue },
           create: {
@@ -161,7 +161,7 @@ wss.on("connection", function connection(ws, request) {
         return;
       }
 
-      // broadcast to room (always send stringified message)
+    
       users.forEach((user) => {
         if (user.rooms.includes(roomId)) {
           user.ws.send(
