@@ -9,7 +9,7 @@ export default function LeftBar() {
           className="p-3 pt-0 rounded-2xl cursor-pointer"
           title="Home"
         >
-          <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+          <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
             <img src="./house-regular.svg" alt="" />
           </div>
         </Link>
@@ -19,7 +19,7 @@ export default function LeftBar() {
           className="p-3 rounded-2xl cursor-pointer"
           title="Profile"
         >
-          <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+          <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
             <img src="./user-regular-full.svg" alt="" />
           </div>
         </Link>
@@ -29,7 +29,7 @@ export default function LeftBar() {
           className="p-3 rounded-2xl cursor-pointer"
           title="Your Canvases"
         >
-          <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+          <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
             <img src="./pen-to-square-regular-full.svg" alt="" />
           </div>
         </Link>
@@ -39,7 +39,7 @@ export default function LeftBar() {
           className="p-3 rounded-2xl cursor-pointer"
           title="Joined Rooms"
         >
-          <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+          <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
             <img src="./users-solid-full.svg" alt="" />
           </div>
         </Link>
@@ -50,7 +50,7 @@ export default function LeftBar() {
           title="Notifications"
         >
           <div className="relative">
-            <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+            <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
               <img src="./bell-regular-full.svg" alt="" />
             </div>
 
@@ -64,7 +64,7 @@ export default function LeftBar() {
           className="p-3 rounded-2xl mb-4 cursor-pointer"
           title="Settings"
         >
-            <div className="p-2 w-10 bg-white/10 rounded-2xl flex items-center justify-center">
+            <div className="p-2 w-10 sm:w-8 bg-white/10 rounded-2xl flex items-center justify-center">
               <img src="./gear-solid-full.svg" alt="Settings" />
             </div>
 
