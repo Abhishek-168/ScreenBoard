@@ -48,7 +48,7 @@ export default function CreateRoomModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center"
+      className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 md:p-0"
       onClick={onClose}
     >
       <div
@@ -59,12 +59,12 @@ export default function CreateRoomModal({
         <img
           src="./brightsparks.png"
           alt=""
-          className="w-[6vw] absolute -top-10 -left-10 -rotate-25"
+          className="w-16 absolute -top-8 -left-8 -rotate-12 md:w-[6vw] md:-top-10 md:-left-10 md:-rotate-25"
         />
 
        
-        <div className="flex flex-col gap-6 w-[30vw] p-8 rounded-xl bg-gray-900">
-          <span className="text-center text-3xl font-charlie">
+        <div className="flex flex-col gap-4 w-full max-w-sm p-6 rounded-xl bg-gray-900 md:gap-6 md:w-[30vw] md:max-w-none md:p-8">
+          <span className="text-center text-2xl font-charlie md:text-3xl">
             Create Room
           </span>
 
@@ -73,13 +73,13 @@ export default function CreateRoomModal({
             placeholder="Room name"
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className="p-4 border border-violet-800 focus:border-amber-300 outline-none rounded-xl bg-transparent"
+            className="p-3 border border-violet-800 focus:border-amber-300 outline-none rounded-xl bg-transparent md:p-4"
           />
 
           <button
             onClick={handleRoomCreate}
             disabled={loading}
-            className="bg-amber-300 text-xl p-4 rounded-xl text-black font-charlie cursor-pointer disabled:opacity-60"
+            className="bg-amber-300 text-lg p-3 rounded-xl text-black font-charlie cursor-pointer disabled:opacity-60 md:text-xl md:p-4"
           >
             {loading ? 'Creating...' : 'Create Room'}
           </button>

@@ -84,7 +84,7 @@ export default function Room() {
         console.log("Room " + roomName + " not found");
         return;
       } else {
-        // ensure id is a string (convert if needed)
+        
         setLoader(false);
         setSearchResult(
           data.map((room: any) => ({
@@ -161,35 +161,35 @@ function MainHeroSection({
   setOpen,
 }: MainHeroSectionProps) {
   return (
-    <div className="pl-8 max-w-[74vw] pr-4">
-      {/* Action Bar Container */}
-      <div className="flex items-center gap-4 mb-6 mt-8 p-2 pl-0 rounded-3xl backdrop-blur-sm w-fit">
-        {/* Search Section */}
-        <div className="flex items-center">
+    <div className="pl-8 sm:w-full md:w-[74vw] pr-4">
+
+      <div className="flex items-center sm:gap-1 gap-4 mb-6 mt-8 p-2 pl-0 rounded-3xl backdrop-blur-sm w-fit">
+      
+        <div className="flex md:items-center">
           <input
             type="text"
             placeholder="Search by room name or room id..."
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className="w-[35vw] px-5 py-3.5 rounded-3xl focus:outline-none bg-slate-800/60 border border-slate-700/40 text-white placeholder:text-slate-500"
+            className="sm:w-[56vw] sm:px-5 sm:py-4 sm:rounded-3xl md:w-[35vw] md:px-5 md:py-3.5 md:rounded-3xl focus:outline-none bg-slate-800/60 border border-slate-700/40 text-white placeholder:text-slate-500"
           />
           <img
             src="./search.svg"
             onClick={() => handleSearch()}
             alt=""
-            className="w-[1.6vw] relative -left-[3vw] cursor-pointer"
+            className="sm:w-[3vw] md:w-[1.6vw] relative sm:-left-[4vw] -left-[3vw] cursor-pointer"
           />
         </div>
 
-        {/* Create Room Button */}
+      
         <div
-          className="cursor-pointer bg-amber-300 hover:bg-amber-400 w-[11.3vw] flex justify-center px-5 py-3.5 rounded-3xl transition-all duration-300"
+          className="sm:w-[20vw] sm:px-2 sm:py-4 sm:gap-2 md:gap-0 cursor-pointer bg-amber-300 hover:bg-amber-400 md:w-[11.3vw] flex justify-center px-5 py-3.5 rounded-3xl transition-all duration-300"
           onClick={() => handleRoomCreate()}
         >
           <img
             src="./plus-solid-full.svg"
             alt=""
-            className="w-[1.5vw] mr-3 brightness-0"
+            className="sm:w-[3vw] md:w-[1.5vw] md:mr-3 brightness-0"
           />
           <span className="text-slate-900 font-medium">Create Room</span>
         </div>

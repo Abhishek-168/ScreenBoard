@@ -55,15 +55,15 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
   };
 
   return (
-    <section className="mt-10 flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-2xl font-bold">{title}</h3>
+    <section className="sm:w-full mt-6 flex flex-col md:mt-10">
+      <div className="flex items-center justify-between mb-3 md:mb-4">
+        <h3 className="text-xl font-bold md:text-2xl">{title}</h3>
       </div>
-      <div className="relative group">
+      <div className="relative group md:relative md:group">
         <button
           onClick={scrollLeft}
           disabled={!canScrollLeft}
-          className={`absolute left-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-lg transition-all duration-300 ${
+          className={`absolute left-1 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full shadow-lg transition-all duration-300 md:left-2 md:p-2 ${
             canScrollLeft
               ? "bg-slate-800 hover:bg-slate-700 cursor-pointer opacity-0 group-hover:opacity-100"
               : "bg-slate-800/50 opacity-0 cursor-not-allowed"
@@ -72,7 +72,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-4 w-4 md:h-5 md:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -88,7 +88,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
         <button
           onClick={scrollRight}
           disabled={!canScrollRight}
-          className={`absolute right-2 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full shadow-lg transition-all duration-300 ${
+          className={`absolute right-1 top-1/2 -translate-y-1/2 z-10 p-1.5 rounded-full shadow-lg transition-all duration-300 md:right-2 md:p-2 ${
             canScrollRight
               ? "bg-slate-800 hover:bg-slate-700 cursor-pointer opacity-0 group-hover:opacity-100"
               : "bg-slate-800/50 opacity-0 cursor-not-allowed"
@@ -97,7 +97,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-4 w-4 md:h-5 md:w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -112,7 +112,7 @@ export default function RoomsCarousel({ rooms, title = "Rooms" }: RoomsCarouselP
         </button>
         <div
           ref={containerRef}
-          className="flex flex-row gap-8 overflow-x-hidden overflow-y-hidden pb-4"
+          className="flex flex-row gap-4 overflow-x-hidden overflow-y-hidden pb-3 md:gap-8 md:pb-4"
         >
           {rooms.map((room: Room) => (
             <RoomCard key={room.id} room={room} />
