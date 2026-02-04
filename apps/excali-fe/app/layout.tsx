@@ -27,6 +27,10 @@ const boldonse = Boldonse({
 export const metadata: Metadata = {
   title: "ScreenBoard - Real-time Collaborative Drawing",
   description: "The real time drawing platform",
+  icons: {
+    icon: "/screenboardlogo.png",
+    apple: "/screenboardlogo.png",
+  },
 };
 
 export default function RootLayout({
