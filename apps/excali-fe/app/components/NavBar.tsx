@@ -12,14 +12,14 @@ export default function NavBar() {
 
         <div className="flex items-center gap-2">
           <Link
-            href="/"
+            href="https://github.com/Abhishek-168/ScreenBoard" target="_blank"
             className=" px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200 group"
           >
             <img src="./github-brands-solid-full.svg" alt="Github" className="w-8" />
           </Link>
 
            <Link
-            href="/"
+            href="https://www.linkedin.com/in/abhishek-jain-71879030b/" target="_blank"
             className=" px-4 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/50 transition-all duration-200 group"
           >
             <img src="./linkedin-brands-solid-full.svg" alt="Github" className="w-8" />
