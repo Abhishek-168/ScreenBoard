@@ -1,21 +1,41 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono} from "next/font/google";
+import {
+  Geist,
+  Geist_Mono,
+  Finger_Paint,
+  Boldonse,
+} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
 });
 
+const fingerPaint = Finger_Paint({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-finger-paint",
+  display: "swap",
+});
+
+const boldonse = Boldonse({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-boldonse",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "ScreenBoard - Real-time Collaborative Drawing",
-  description: "The real time drawing platform",
+  description: "The real-time drawing platform",
   icons: {
     icon: "/screenboardlogo.png",
     apple: "/screenboardlogo.png",
@@ -24,13 +44,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${fingerPaint.variable} ${boldonse.variable} antialiased`}
       >
         {children}
       </body>

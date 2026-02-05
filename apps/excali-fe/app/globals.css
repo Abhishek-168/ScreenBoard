@@ -1,5 +1,4 @@
 /* Import fonts */
-@import url('https://fonts.googleapis.com/css2?family=Finger+Paint&family=Boldonse&family=Lexend&family=Google+Sans&display=swap');
 
 /* Import Tailwind */
 @import "tailwindcss";
@@ -76,45 +75,6 @@ body {
     fill: #000000;
 }
 
-.silkscreen-regular {
-  font-family: "Silkscreen", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.silkscreen-bold {
-  font-family: "Silkscreen", sans-serif;
-  font-weight: 700;
-  font-style: normal;
-}
-
-.kablammo {
-  font-family: "Kablammo", system-ui;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  font-style: normal;
-  font-variation-settings:
-    "MORF" 0;
-}
-.metal-mania-regular {
-  font-family: "Metal Mania", system-ui;
-  font-weight: 400;
-  font-style: normal;
-}
-.Text-infront {
-    font-family: var(--font-boldonse);
-    position: relative;
-    padding-bottom: 4rem;
-    font-size: 60px;
-    z-index: 10;
-}
-.Text-behind {
-    font-family: var(--font-boldonse);
-    position: relative;
-    padding-bottom: 4rem;
-    font-size: 60px;
-    z-index: -10;
-}
 
 @keyframes shimmer {
   100% {
