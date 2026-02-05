@@ -1,6 +1,6 @@
 import WebSocket, { WebSocketServer } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { SECRET } from "@repo/common/config";
+
 import { prismaClient } from "@repo/db/datab";
 
 interface User {
@@ -8,6 +8,7 @@ interface User {
   userId: string;
   rooms: string[];
 }
+const SECRET = process.env.JWT_SECRET || "default-secret";
 
 const users: User[] = [];
 

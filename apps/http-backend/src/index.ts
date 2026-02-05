@@ -1,6 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { SECRET } from "@repo/common/config";
 import {
   userSchema,
   signinSchema,
@@ -9,6 +8,8 @@ import {
 import { middleAuth } from "./middleware";
 import { prismaClient } from "@repo/db/datab";
 import cors from "cors";
+
+const SECRET = process.env.JWT_SECRET || "default-secret";
 
 const app = express();
 app.use(express.json());

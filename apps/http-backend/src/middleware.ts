@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { SECRET } from "@repo/common/config";
+
+
+const SECRET = process.env.JWT_SECRET || "default-secret";
 
 export const middleAuth = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"];
