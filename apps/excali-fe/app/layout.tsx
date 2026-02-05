@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Finger_Paint, Boldonse } from "next/font/google";
+import { Geist, Geist_Mono} from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,17 +12,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const fingerPaint = Finger_Paint({
-  variable: "--font-finger-paint",
-  weight: "400",
-  subsets: ["latin"],
-});
-
-const boldonse = Boldonse({
-  variable: "--font-boldonse",
-  weight: "400",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "ScreenBoard - Real-time Collaborative Drawing",
@@ -41,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${fingerPaint.variable} ${boldonse.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable}  antialiased`}
       >
         {children}
       </body>
