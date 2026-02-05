@@ -1,6 +1,6 @@
+import http from "http";
 import WebSocket, { WebSocketServer } from "ws";
 import jwt, { JwtPayload } from "jsonwebtoken";
-
 import { prismaClient } from "@repo/db/datab";
 
 interface User {
@@ -11,6 +11,16 @@ interface User {
 const SECRET = process.env.JWT_SECRET || "default-secret";
 
 const users: User[] = [];
+
+const server = http.createServer((req, res) => {
+  if (req.url === '/') {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('OK');
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+});
 
 const wss = new WebSocketServer({ port: 8080 });
 
