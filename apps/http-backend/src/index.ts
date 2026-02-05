@@ -165,4 +165,9 @@ app.get("/room/:slug", async (req, res) => {
   res.json(room);
 });
 
+app.get('/healthz', (req, res) => {
+    res.status(200).send('OK');
+});
+
+
 app.listen(3001);
