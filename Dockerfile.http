@@ -2,30 +2,38 @@ FROM node:20-alpine AS builder
 RUN apk add --no-cache libc6-compat && apk update
 WORKDIR /app
 
-RUN npm install turbo pnpm --global
+# Install turbo & pnpm globally
+RUN npm install -g turbo pnpm
 COPY . .
+
+# Prune monorepo for http-backend
 RUN turbo prune --scope=http-backend --docker
 
-# --- INSTALL ---
+# --- INSTALL STAGE ---
 FROM node:20-alpine AS installer
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# ✅ FIX: Install pnpm in THIS stage too
+RUN npm install -g pnpm
+
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+
+# Now pnpm works!
 RUN pnpm install --frozen-lockfile
 
 COPY --from=builder /app/out/full/ .
 COPY turbo.json turbo.json
 
-# FIXED: Run prisma generate DIRECTLY from packages/db (no script needed)
+# Generate Prisma client
 RUN cd packages/db && npx prisma generate
 
-# Build backend (your turbo.json handles dependencies)
+# Build backend
 RUN turbo run build --filter=http-backend...
 
-# --- RUN ---
+# --- RUNNER STAGE ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs && \
