@@ -22,7 +22,8 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ server }); 
+
 
 function checkUser(token: string): string | null {
   try {
@@ -186,4 +187,9 @@ wss.on("connection", function connection(ws, request) {
       });
     }
   });
+});
+
+
+server.listen(process.env.PORT || 8080, () => {
+  console.log(`Server running on port ${process.env.PORT || 8080}`);
 });
