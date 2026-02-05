@@ -20,12 +20,18 @@ app.use(
   })
 );
 
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? 'https://screenboard-gray.vercel.app' 
-    : 'http://localhost:3000',
-  credentials: true
-}));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://screenboard-gray.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
