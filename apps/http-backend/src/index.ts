@@ -7,7 +7,6 @@ import {
 } from "@repo/pure-common/types";
 import { middleAuth } from "./middleware";
 import { prismaClient } from "@repo/db/datab";
-import cors from "cors";
 
 const SECRET = process.env.JWT_SECRET || "default-secret";
 
@@ -16,7 +15,7 @@ app.use(express.json());
 
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://screenboard-gray.vercel.app');
+  res.header('Access-Control-Allow-Origin', "*");
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
