@@ -124,13 +124,16 @@ function CoreFeatures() {
         <img src="./sidesvg.png" alt="" className="absolute  md:block md:absolute md:-left-16 md:top-0" />
         <div className="pl-4 md:pl-30">
           <div>
-            <Feature title="Modern Drawing Canvas" />
+            <Feature title="Modern Drawing Canvas" 
+            description="Draw on a modern, responsive canvas with a variety of tools and options. Drag elements, change colors, and customize your artwork with ease.
+            Add text, shapes, and images to bring your ideas to life. Use AI-powered tools to enhance your creativity." />
           </div>
           <div>
-            <Feature title="Synched Collaborative Canvas" />
+            <Feature title="Synched Collaborative Canvas" description="Collaborate in real-time with others on the same canvas. See live cursors, conflict-free updates, and low-latency synchronization for a seamless team experience.
+            " />
           </div>
           <div>
-            <Feature title="Create Rooms Public or Private" />
+            <Feature title="Create Rooms Public or Private" description="Create public or private rooms to control access and collaboration. Invite team members or share links to join. Manage room settings and permissions for a secure and flexible experience." />
           </div>
         </div>
       </div>
@@ -138,7 +141,7 @@ function CoreFeatures() {
   );
 }
 
-function Feature({ title }: { title: string }) {
+function Feature({ title , description}: { title: string , description: string}) {
   return (
     <>
       <div className="flex md:flex-row items-center p-4 md:p-8 w-full md:w-[70vw] mx-auto rounded-xl gap-6 md:gap-10 md:pl-[4vw] mt-6 md:mt-[1.4vw]">
@@ -151,11 +154,7 @@ function Feature({ title }: { title: string }) {
         <div className="flex flex-col max-w-full md:max-w-[37vw] md:ml-[4vw]">
           <h2 className="text-2xl md:text-4xl font-charlie text-white">{title}</h2>
           <p className="text-white mt-2 text-sm md:text-xl leading-relaxed font-sans text-justify">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe
-            temporibus, doloremque accusantium amet animi provident. Quos quasi
-            nulla, doloremque quae! A eaque quos tempora adipisci, excepturi rem
-            laudantium assumenda dolores sed quis esse praesentium at quia
-            inventore dolor consequuntur!
+            {description}
           </p>
         </div>
       </div>
