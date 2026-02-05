@@ -19,6 +19,14 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://screenboard-gray.vercel.app' 
+    : 'http://localhost:3000',
+  credentials: true
+}));
+
 app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
   if (!parsedData.success) {
