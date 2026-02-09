@@ -640,7 +640,6 @@ export class Game {
       this.spacePressed = true;
       this.canvas.style.cursor = "grab";
     }
-    // Ctrl+= / Ctrl+- zoom shortcuts
     if ((e.ctrlKey || e.metaKey) && (e.key === "=" || e.key === "+")) {
       e.preventDefault();
       this.zoomAtCenter(1.1);
