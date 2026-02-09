@@ -63,6 +63,17 @@ export class Game {
   private cursorInterval: NodeJS.Timeout | null = null;
   private cursorPosition = 0;
 
+  private panX = 0;
+  private panY = 0;
+  private isPanning = false;
+  private panStartX = 0;
+  private panStartY = 0;
+  private spacePressed = false;
+  private scale = 1;
+  private readonly MIN_SCALE = 0.1;
+  private readonly MAX_SCALE = 10;
+  private onZoomChange?: (scale: number) => void;
+
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     this.canvas = canvas;
     this.roomId = roomId;
@@ -80,7 +91,10 @@ export class Game {
     this.canvas.removeEventListener("mouseup", this.handleMouseUp);
     this.canvas.removeEventListener("mousemove", this.handleMouseMove);
     this.canvas.removeEventListener("dblclick", this.handleDoubleClick);
+    this.canvas.removeEventListener("wheel", this.handleWheel);
     document.removeEventListener("keydown", this.handleKeyDown);
+    document.removeEventListener("keydown", this.handleSpaceDown);
+    document.removeEventListener("keyup", this.handleSpaceUp);
     this.stopCursorBlink();
   }
 
@@ -96,6 +110,14 @@ export class Game {
   }
 
   private getCanvasCoords(e: MouseEvent) {
+    const rect = this.canvas.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left - this.panX) / this.scale,
+      y: (e.clientY - rect.top - this.panY) / this.scale,
+    };
+  }
+
+  private getScreenCoords(e: MouseEvent) {
     const rect = this.canvas.getBoundingClientRect();
     return {
       x: e.clientX - rect.left,
@@ -225,7 +247,15 @@ export class Game {
   }
 
   clearCanvas() {
+    this.ctx.save();
+    this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.ctx.restore();
+
+    this.ctx.save();
+    this.ctx.translate(this.panX, this.panY);
+    this.ctx.scale(this.scale, this.scale);
+    this.ctx.lineWidth = 1.2 / this.scale;
 
     for (const shape of this.existingShapes) {
       if (shape.type === "rect") {
@@ -250,10 +280,12 @@ export class Game {
         if (this.editingText && this.editingText.id === shape.id && this.cursorVisible) {
           const textBeforeCursor = shape.text.substring(0, this.cursorPosition);
           const cursorX = shape.x + this.ctx.measureText(textBeforeCursor).width;
-          this.ctx.fillRect(cursorX, shape.y - shape.fontSize * 0.85, 2, shape.fontSize * 1.1);
+          this.ctx.fillRect(cursorX, shape.y - shape.fontSize * 0.85, 2 / this.scale, shape.fontSize * 1.1);
         }
       }
     }
+
+    this.ctx.restore();
   }
 
   initHandlers() {
@@ -270,6 +302,20 @@ export class Game {
   }
 
   handleMouseDown = (e: MouseEvent) => {
+    if (
+      e.button === 1 ||
+      (this.spacePressed && e.button === 0) ||
+      (this.selectedTool === "hand" && e.button === 0)
+    ) {
+      e.preventDefault();
+      this.isPanning = true;
+      const screen = this.getScreenCoords(e);
+      this.panStartX = screen.x - this.panX;
+      this.panStartY = screen.y - this.panY;
+      this.canvas.style.cursor = "grabbing";
+      return;
+    }
+
     const { x, y } = this.getCanvasCoords(e);
     
   
@@ -317,6 +363,13 @@ export class Game {
   };
 
   handleMouseUp = (e: MouseEvent) => {
+    if (this.isPanning) {
+      this.isPanning = false;
+      this.canvas.style.cursor =
+        this.selectedTool === "hand" ? "grab" : "default";
+      return;
+    }
+
     const { x, y } = this.getCanvasCoords(e);
     this.clicked = false;
 
@@ -413,9 +466,19 @@ export class Game {
   };
 
   handleMouseMove = (e: MouseEvent) => {
+    if (this.isPanning) {
+      const screen = this.getScreenCoords(e);
+      this.panX = screen.x - this.panStartX;
+      this.panY = screen.y - this.panStartY;
+      this.clearCanvas();
+      return;
+    }
+
     const { x, y } = this.getCanvasCoords(e);
 
-    if (this.selectedTool === "select" && this.elementClicked) {
+    if (this.selectedTool === "hand") {
+      this.canvas.style.cursor = "grab";
+    } else if (this.selectedTool === "select" && this.elementClicked) {
       this.canvas.style.cursor = "move";
     } else {
       this.canvas.style.cursor = "default";
@@ -423,6 +486,11 @@ export class Game {
 
     if (this.clicked) {
       this.clearCanvas();
+
+      this.ctx.save();
+      this.ctx.translate(this.panX, this.panY);
+      this.ctx.scale(this.scale, this.scale);
+      this.ctx.lineWidth = 1.2 / this.scale;
 
       if (this.selectedTool === "rect") {
         this.strokeRoundRect(
@@ -454,6 +522,8 @@ export class Game {
           x - this.startX,
         );
       }
+
+      this.ctx.restore();
       return;
     }
 
@@ -468,7 +538,15 @@ export class Game {
       const origX = (this.selectedElement as any).__origX;
       const origY = (this.selectedElement as any).__origY;
 
+      this.ctx.save();
+      this.ctx.setTransform(1, 0, 0, 1, 0, 0);
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.restore();
+
+      this.ctx.save();
+      this.ctx.translate(this.panX, this.panY);
+      this.ctx.scale(this.scale, this.scale);
+      this.ctx.lineWidth = 1.2 / this.scale;
 
       for (const shape of this.existingShapes) {
         if (shape.id === this.selectedElement.id) continue;
@@ -525,14 +603,116 @@ export class Game {
         this.ctx.fillStyle = "white";
         this.ctx.fillText(s.text, origX + dx, origY + dy);
       }
+
+      this.ctx.restore();
     }
   };
+
+  handleWheel = (e: WheelEvent) => {
+    e.preventDefault();
+
+    if (e.ctrlKey || e.metaKey) {
+      const rect = this.canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+
+      const zoomFactor = e.deltaY < 0 ? 1.1 : 1 / 1.1;
+      const newScale = Math.min(
+        this.MAX_SCALE,
+        Math.max(this.MIN_SCALE, this.scale * zoomFactor),
+      );
+
+      this.panX = mx - (mx - this.panX) * (newScale / this.scale);
+      this.panY = my - (my - this.panY) * (newScale / this.scale);
+      this.scale = newScale;
+      this.onZoomChange?.(this.scale);
+    } else {
+      this.panX -= e.deltaX;
+      this.panY -= e.deltaY;
+    }
+
+    this.clearCanvas();
+  };
+
+  handleSpaceDown = (e: KeyboardEvent) => {
+    if (e.code === "Space" && !this.editingText) {
+      e.preventDefault();
+      this.spacePressed = true;
+      this.canvas.style.cursor = "grab";
+    }
+    // Ctrl+= / Ctrl+- zoom shortcuts
+    if ((e.ctrlKey || e.metaKey) && (e.key === "=" || e.key === "+")) {
+      e.preventDefault();
+      this.zoomAtCenter(1.1);
+    } else if ((e.ctrlKey || e.metaKey) && e.key === "-") {
+      e.preventDefault();
+      this.zoomAtCenter(1 / 1.1);
+    } else if ((e.ctrlKey || e.metaKey) && e.key === "0") {
+      e.preventDefault();
+      this.resetZoom();
+    }
+  };
+
+  handleSpaceUp = (e: KeyboardEvent) => {
+    if (e.code === "Space") {
+      this.spacePressed = false;
+      if (!this.isPanning) {
+        this.canvas.style.cursor =
+          this.selectedTool === "hand" ? "grab" : "default";
+      }
+    }
+  };
+
+  setOnZoomChange(cb: (scale: number) => void) {
+    this.onZoomChange = cb;
+    cb(this.scale);
+  }
+
+  getScale() {
+    return this.scale;
+  }
+
+  zoomIn() {
+    this.zoomAtCenter(1.1);
+  }
+
+  zoomOut() {
+    this.zoomAtCenter(1 / 1.1);
+  }
+
+  zoomReset() {
+    this.resetZoom();
+  }
+
+  private zoomAtCenter(factor: number) {
+    const cx = this.canvas.width / 2;
+    const cy = this.canvas.height / 2;
+    const newScale = Math.min(
+      this.MAX_SCALE,
+      Math.max(this.MIN_SCALE, this.scale * factor),
+    );
+    this.panX = cx - (cx - this.panX) * (newScale / this.scale);
+    this.panY = cy - (cy - this.panY) * (newScale / this.scale);
+    this.scale = newScale;
+    this.onZoomChange?.(this.scale);
+    this.clearCanvas();
+  }
+
+  private resetZoom() {
+    this.scale = 1;
+    this.panX = 0;
+    this.panY = 0;
+    this.onZoomChange?.(this.scale);
+    this.clearCanvas();
+  }
 
   initMouseHandlers() {
     this.canvas.addEventListener("mousedown", this.handleMouseDown);
     this.canvas.addEventListener("mouseup", this.handleMouseUp);
     this.canvas.addEventListener("mousemove", this.handleMouseMove);
     this.canvas.addEventListener("dblclick", this.handleDoubleClick);
+    this.canvas.addEventListener("wheel", this.handleWheel, { passive: false });
+    this.canvas.addEventListener("auxclick", (e) => e.preventDefault());
   }
 
   handleDoubleClick = (e: MouseEvent) => {
@@ -547,12 +727,12 @@ export class Game {
   };
 
   createTextAtPosition(x: number, y: number) {
-    const fontSize = 20;
+    const fontSize = 20 / this.scale;
     const textShape: Shape = {
       type: "text",
       id: crypto.randomUUID(),
       x,
-      y: y + fontSize, // Offset y by fontSize so text appears at click position
+      y: y + fontSize,
       text: "",
       fontSize: fontSize,
     };
@@ -592,7 +772,6 @@ export class Game {
         }),
       );
     } else {
-      // Remove empty text
       const idx = this.existingShapes.findIndex((s) => s.id === textShape.id);
       if (idx !== -1) {
         this.existingShapes.splice(idx, 1);
@@ -694,5 +873,7 @@ export class Game {
 
   initKeyboardHandlers() {
     document.addEventListener("keydown", this.handleKeyDown);
+    document.addEventListener("keydown", this.handleSpaceDown);
+    document.addEventListener("keyup", this.handleSpaceUp);
   }
 }
