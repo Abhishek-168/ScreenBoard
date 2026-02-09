@@ -93,8 +93,8 @@ export default function Canvas({
             className="cursor-pointer p-2"
             onClick={() => setSelectedTool("hand")}
           >
-            <div className="p-2 w-8 hover:bg-white/10 rounded-2xl flex items-center justify-center">
-              <span className="text-xl">✋</span>
+            <div className="p-2 pt-3 w-9 hover:bg-white/10 rounded-2xl flex items-center justify-center">
+              <img src="/hand-regular-full.svg" alt="" />
             </div>
           </button>
         </div>
