@@ -10,12 +10,11 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async () => {
     try {
-      setLoading(true);
+     
       const { data } = await axios.post(`${BE_URL}/signup`, {
         name,
         email,
@@ -24,16 +23,16 @@ export default function Signup() {
       const token = data;
       if (!token) {
         console.error("Missing token in response");
-        setLoading(false);
+      
         return;
       }
       localStorage.setItem("token", token);
       router.push("/rooms");
       console.log(data);
-      setLoading(false);
+    
     } catch (error) {
       console.error("Error during signup:", error);
-      setLoading(false);
+    
     }
   };
 
@@ -78,9 +77,9 @@ export default function Signup() {
           />
           <button
             className="bg-amber-300 p-3 md:p-4 cursor-pointer rounded-xl text-lg md:text-xl text-black font-charlie font-bold hover:bg-amber-400 transition"
-            onClick={() => handleSubmit()} disabled={loading}
+            onClick={() => handleSubmit()}
           >
-            {loading ? "Signing Up..." : "Sign Up"}
+           Sign Up
           </button>
           <span className="text-center text-sm md:text-base text-white">
             Already have an account?{" "}
