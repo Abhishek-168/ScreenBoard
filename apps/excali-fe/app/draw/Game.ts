@@ -73,12 +73,16 @@ export class Game {
   private readonly MIN_SCALE = 0.1;
   private readonly MAX_SCALE = 10;
   private onZoomChange?: (scale: number) => void;
+  private fontReady: Promise<void> | null = null;
+  private readonly textFontFamily = "'Excalifont', Arial, sans-serif";
 
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     this.canvas = canvas;
     this.roomId = roomId;
     this.socket = socket;
     this.ctx = canvas.getContext("2d")!;
+
+    this.fontReady = this.loadTextFont();
 
     this.initDraw();
     this.initHandlers();
@@ -103,10 +107,28 @@ export class Game {
   }
 
   async initDraw() {
+    if (this.fontReady) {
+      await this.fontReady;
+    }
     this.existingShapes = await getExistingShapes(this.roomId);
     this.ctx.strokeStyle = "white";
     this.ctx.lineWidth = 1.2;
     this.clearCanvas();
+  }
+
+  private async loadTextFont() {
+    if (typeof document === "undefined" || !document.fonts?.load) {
+      return;
+    }
+
+    try {
+      await document.fonts.load(`16px ${this.textFontFamily}`);
+    } catch {
+    }
+  }
+
+  private setTextFont(fontSize: number) {
+    this.ctx.font = `${fontSize}px ${this.textFontFamily}`;
   }
 
   private getCanvasCoords(e: MouseEvent) {
@@ -204,7 +226,7 @@ export class Game {
     }
 
     if (shape.type === "text") {
-      this.ctx.font = `${shape.fontSize}px Arial`;
+      this.setTextFont(shape.fontSize);
       const metrics = this.ctx.measureText(shape.text);
       const textWidth = metrics.width;
       const textHeight = shape.fontSize;
@@ -272,7 +294,7 @@ export class Game {
         this.ctx.lineTo(shape.endX, shape.endY);
         this.ctx.stroke();
       } else if (shape.type === "text") {
-        this.ctx.font = `${shape.fontSize}px Arial`;
+        this.setTextFont(shape.fontSize);
         this.ctx.fillStyle = "white";
         this.ctx.fillText(shape.text, shape.x, shape.y);
         
@@ -571,7 +593,7 @@ export class Game {
           this.ctx.lineTo(shape.endX, shape.endY);
           this.ctx.stroke();
         } else if (shape.type === "text") {
-          this.ctx.font = `${shape.fontSize}px Arial`;
+          this.setTextFont(shape.fontSize);
           this.ctx.fillStyle = "white";
           this.ctx.fillText(shape.text, shape.x, shape.y);
         }
@@ -599,7 +621,7 @@ export class Game {
         this.ctx.lineTo(s.endX + dx, s.endY + dy);
         this.ctx.stroke();
       } else if (s.type === "text") {
-        this.ctx.font = `${s.fontSize}px Arial`;
+        this.setTextFont(s.fontSize);
         this.ctx.fillStyle = "white";
         this.ctx.fillText(s.text, origX + dx, origY + dy);
       }
