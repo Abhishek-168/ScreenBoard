@@ -54,7 +54,7 @@ export class Game {
 
   private selectedElement: Shape | null = null;
   private elementClicked = false;
-  
+
   private editingText: Shape | null = null;
   private lastClickTime = 0;
   private lastClickX = 0;
@@ -123,8 +123,7 @@ export class Game {
 
     try {
       await document.fonts.load(`16px ${this.textFontFamily}`);
-    } catch {
-    }
+    } catch {}
   }
 
   private setTextFont(fontSize: number) {
@@ -277,6 +276,8 @@ export class Game {
     this.ctx.save();
     this.ctx.translate(this.panX, this.panY);
     this.ctx.scale(this.scale, this.scale);
+    this.ctx.strokeStyle = "white";
+    this.ctx.fillStyle = "white";
     this.ctx.lineWidth = 1.2 / this.scale;
 
     for (const shape of this.existingShapes) {
@@ -297,12 +298,21 @@ export class Game {
         this.setTextFont(shape.fontSize);
         this.ctx.fillStyle = "white";
         this.ctx.fillText(shape.text, shape.x, shape.y);
-        
 
-        if (this.editingText && this.editingText.id === shape.id && this.cursorVisible) {
+        if (
+          this.editingText &&
+          this.editingText.id === shape.id &&
+          this.cursorVisible
+        ) {
           const textBeforeCursor = shape.text.substring(0, this.cursorPosition);
-          const cursorX = shape.x + this.ctx.measureText(textBeforeCursor).width;
-          this.ctx.fillRect(cursorX, shape.y - shape.fontSize * 0.85, 2 / this.scale, shape.fontSize * 1.1);
+          const cursorX =
+            shape.x + this.ctx.measureText(textBeforeCursor).width;
+          this.ctx.fillRect(
+            cursorX,
+            shape.y - shape.fontSize * 0.85,
+            2 / this.scale,
+            shape.fontSize * 1.1,
+          );
         }
       }
     }
@@ -339,29 +349,27 @@ export class Game {
     }
 
     const { x, y } = this.getCanvasCoords(e);
-    
-  
+
     if (this.editingText) {
       const el = this.getContainedElement(x, y);
       if (!el || el.id !== this.editingText.id) {
         this.finishTextEditing();
       }
     }
-    
+
     this.startX = x;
     this.startY = y;
 
-    
     const now = Date.now();
     const timeDiff = now - this.lastClickTime;
     const distance = Math.hypot(x - this.lastClickX, y - this.lastClickY);
-    
+
     if (timeDiff < 300 && distance < 10) {
       this.handleDoubleClick(e);
       this.lastClickTime = 0;
       return;
     }
-    
+
     this.lastClickTime = now;
     this.lastClickX = x;
     this.lastClickY = y;
@@ -739,7 +747,7 @@ export class Game {
   handleDoubleClick = (e: MouseEvent) => {
     const { x, y } = this.getCanvasCoords(e);
     const el = this.getContainedElement(x, y);
-    
+
     if (el && el.type === "text") {
       this.editText(el);
     } else {
@@ -757,7 +765,7 @@ export class Game {
       text: "",
       fontSize: fontSize,
     };
-    
+
     this.editingText = textShape;
     this.cursorPosition = 0;
     this.existingShapes.push(textShape);
@@ -774,16 +782,16 @@ export class Game {
 
   finishTextEditing() {
     if (!this.editingText || this.editingText.type !== "text") return;
-    
+
     const textShape = this.editingText;
     const newText = textShape.text.trim();
-    
+
     if (newText) {
       const idx = this.existingShapes.findIndex((s) => s.id === textShape.id);
       if (idx !== -1) {
         this.existingShapes[idx] = textShape;
       }
-      
+
       this.socket.send(
         JSON.stringify({
           type: textShape.text === "" ? "chat" : "update-shape",
@@ -798,7 +806,7 @@ export class Game {
         this.existingShapes.splice(idx, 1);
       }
     }
-    
+
     this.stopCursorBlink();
     this.editingText = null;
     this.clearCanvas();
@@ -829,7 +837,9 @@ export class Game {
       this.finishTextEditing();
     } else if (e.key === "Escape") {
       e.preventDefault();
-      const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+      const idx = this.existingShapes.findIndex(
+        (s) => s.id === this.editingText!.id,
+      );
       if (idx !== -1 && this.editingText.text === "") {
         this.existingShapes.splice(idx, 1);
       }
@@ -842,7 +852,10 @@ export class Game {
       this.clearCanvas();
     } else if (e.key === "ArrowRight") {
       e.preventDefault();
-      this.cursorPosition = Math.min(this.editingText.text.length, this.cursorPosition + 1);
+      this.cursorPosition = Math.min(
+        this.editingText.text.length,
+        this.cursorPosition + 1,
+      );
       this.clearCanvas();
     } else if (e.key === "Home") {
       e.preventDefault();
@@ -855,11 +868,13 @@ export class Game {
     } else if (e.key === "Backspace") {
       e.preventDefault();
       if (this.cursorPosition > 0) {
-        this.editingText.text = 
-          this.editingText.text.slice(0, this.cursorPosition - 1) + 
+        this.editingText.text =
+          this.editingText.text.slice(0, this.cursorPosition - 1) +
           this.editingText.text.slice(this.cursorPosition);
         this.cursorPosition--;
-        const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+        const idx = this.existingShapes.findIndex(
+          (s) => s.id === this.editingText!.id,
+        );
         if (idx !== -1) {
           this.existingShapes[idx] = { ...this.editingText };
         }
@@ -868,10 +883,12 @@ export class Game {
     } else if (e.key === "Delete") {
       e.preventDefault();
       if (this.cursorPosition < this.editingText.text.length) {
-        this.editingText.text = 
-          this.editingText.text.slice(0, this.cursorPosition) + 
+        this.editingText.text =
+          this.editingText.text.slice(0, this.cursorPosition) +
           this.editingText.text.slice(this.cursorPosition + 1);
-        const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+        const idx = this.existingShapes.findIndex(
+          (s) => s.id === this.editingText!.id,
+        );
         if (idx !== -1) {
           this.existingShapes[idx] = { ...this.editingText };
         }
@@ -879,12 +896,14 @@ export class Game {
       }
     } else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
-      this.editingText.text = 
-        this.editingText.text.slice(0, this.cursorPosition) + 
-        e.key + 
+      this.editingText.text =
+        this.editingText.text.slice(0, this.cursorPosition) +
+        e.key +
         this.editingText.text.slice(this.cursorPosition);
       this.cursorPosition++;
-      const idx = this.existingShapes.findIndex((s) => s.id === this.editingText!.id);
+      const idx = this.existingShapes.findIndex(
+        (s) => s.id === this.editingText!.id,
+      );
       if (idx !== -1) {
         this.existingShapes[idx] = { ...this.editingText };
       }

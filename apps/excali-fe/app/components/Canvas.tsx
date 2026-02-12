@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Game } from "../draw/Game";
-export type Tool = "circle" | "rect" | "square" | "line" | "select" | "text" | "hand";
+export type Tool =
+  | "circle"
+  | "rect"
+  | "square"
+  | "line"
+  | "select"
+  | "text"
+  | "hand";
 
 export default function Canvas({
   roomId,
@@ -19,28 +26,37 @@ export default function Canvas({
   }, [selectedTool, game]);
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      const g = new Game(canvas, roomId, socket);
-      g.setOnZoomChange((scale) => setZoomPercent(Math.round(scale * 100)));
-      setGame(g);
+    if (!canvasRef.current) return;
 
-      return () => {
-        g.destroy();
-      };
-    }
-  }, [canvasRef]);
+    const canvas = canvasRef.current;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resize(); 
+    window.addEventListener("resize", resize);
+
+    const g = new Game(canvas, roomId, socket);
+    g.setOnZoomChange((scale) => setZoomPercent(Math.round(scale * 100)));
+
+    setGame(g);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      g.destroy();
+    };
+  }, []);
 
   return (
     <>
       <div className="h-screen overflow-hidden">
         <canvas
           ref={canvasRef}
-          width={window.innerWidth}
-          height={window.innerHeight}
           className="bg-[#121212] block"
         ></canvas>
-          <div className="fixed top-[2vw] left-[3vw] text-white z-10 bg-gray-900 p-2 rounded-md h-[5vh] flex justify-center items-center">
+        <div className="fixed top-[2vw] left-[3vw] text-white z-10 bg-gray-900 p-2 rounded-md h-[5vh] flex justify-center items-center">
           <button
             className="cursor-pointer p-2"
             onClick={() => setSelectedTool("rect")}
