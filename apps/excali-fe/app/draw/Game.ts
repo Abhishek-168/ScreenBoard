@@ -81,6 +81,8 @@ export class Game {
     this.roomId = roomId;
     this.socket = socket;
     this.ctx = canvas.getContext("2d")!;
+    this.ctx.strokeStyle = "white";
+    this.ctx.fillStyle = "white";
 
     this.fontReady = this.loadTextFont();
 
