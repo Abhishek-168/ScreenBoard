@@ -270,7 +270,7 @@ export class Game {
   }
 
   clearCanvas() {
-    this.ctx.save();
+   
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.restore();
@@ -319,7 +319,7 @@ export class Game {
       }
     }
 
-    this.ctx.restore();
+
   }
 
   initHandlers() {
