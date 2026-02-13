@@ -75,12 +75,14 @@ export class Game {
   private onZoomChange?: (scale: number) => void;
   private fontReady: Promise<void> | null = null;
   private readonly textFontFamily = "'Excalifont', Arial, sans-serif";
+  private dpr = 1;
 
   constructor(canvas: HTMLCanvasElement, roomId: string, socket: WebSocket) {
     this.canvas = canvas;
     this.roomId = roomId;
     this.socket = socket;
     this.ctx = canvas.getContext("2d")!;
+    this.dpr = window.devicePixelRatio || 1;
     this.ctx.strokeStyle = "white";
     this.ctx.fillStyle = "white";
 
@@ -276,6 +278,7 @@ export class Game {
     this.ctx.restore();
 
     this.ctx.save();
+    this.ctx.scale(this.dpr, this.dpr);
     this.ctx.translate(this.panX, this.panY);
     this.ctx.scale(this.scale, this.scale);
     this.ctx.strokeStyle = "white";
@@ -519,9 +522,7 @@ export class Game {
     if (this.clicked) {
       this.clearCanvas();
 
-      this.ctx.save();
-      this.ctx.translate(this.panX, this.panY);
-      this.ctx.scale(this.scale, this.scale);
+      this.ctx.strokeStyle = "white";
       this.ctx.lineWidth = 1.2 / this.scale;
 
       if (this.selectedTool === "rect") {
@@ -554,8 +555,6 @@ export class Game {
           x - this.startX,
         );
       }
-
-      this.ctx.restore();
       return;
     }
 
@@ -570,14 +569,15 @@ export class Game {
       const origX = (this.selectedElement as any).__origX;
       const origY = (this.selectedElement as any).__origY;
 
-      this.ctx.save();
       this.ctx.setTransform(1, 0, 0, 1, 0, 0);
       this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.ctx.restore();
 
       this.ctx.save();
+      this.ctx.scale(this.dpr, this.dpr);
       this.ctx.translate(this.panX, this.panY);
       this.ctx.scale(this.scale, this.scale);
+      this.ctx.strokeStyle = "white";
+      this.ctx.fillStyle = "white";
       this.ctx.lineWidth = 1.2 / this.scale;
 
       for (const shape of this.existingShapes) {
@@ -699,6 +699,11 @@ export class Game {
     cb(this.scale);
   }
 
+  handleResize() {
+    this.dpr = window.devicePixelRatio || 1;
+    this.clearCanvas();
+  }
+
   getScale() {
     return this.scale;
   }
@@ -716,8 +721,8 @@ export class Game {
   }
 
   private zoomAtCenter(factor: number) {
-    const cx = this.canvas.width / 2;
-    const cy = this.canvas.height / 2;
+    const cx = this.canvas.width / (2 * this.dpr);
+    const cy = this.canvas.height / (2 * this.dpr);
     const newScale = Math.min(
       this.MAX_SCALE,
       Math.max(this.MIN_SCALE, this.scale * factor),

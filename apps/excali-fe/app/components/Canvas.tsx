@@ -30,15 +30,21 @@ export default function Canvas({
 
     const canvas = canvasRef.current;
 
+    let g: Game | null = null;
+
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
+      if (g) g.handleResize();
     };
 
     resize(); 
     window.addEventListener("resize", resize);
 
-    const g = new Game(canvas, roomId, socket);
+    g = new Game(canvas, roomId, socket);
     g.setOnZoomChange((scale) => setZoomPercent(Math.round(scale * 100)));
 
     setGame(g);
