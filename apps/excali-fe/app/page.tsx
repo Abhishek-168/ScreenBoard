@@ -26,7 +26,7 @@ function NavBar() {
           ScreenBoard
         </span>
       </div>
-      <div className="flex flex-wrap items-center gap-4 justify-between md:w-[29vw]">
+      <div className="hidden md:flex md:flex-wrap md:items-center md:gap-4 md:justify-between md:w-[29vw]">
         <Link href="/github.com" className="text-white cursor-pointer">
           Github
         </Link>
@@ -44,6 +44,11 @@ function NavBar() {
           <span className="block skew-x-20">Get Started</span>
         </Link>
 
+        <Link href="/signin" className="text-white cursor-pointer">
+          Log in
+        </Link>
+      </div>
+      <div className="md:hidden lg:hidden block">
         <Link href="/signin" className="text-white cursor-pointer">
           Log in
         </Link>

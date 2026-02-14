@@ -109,9 +109,9 @@ export default function Room() {
     <>
       <div className="flex">
         <LeftBar />
-        <div className="flex-1 ml-[5vw]">
+        <div className="flex-1 ml-[12vw] sm:ml-[6vw] md:ml-[5vw]">
           <NavBar />
-          <div className="flex mt-16">
+          <div className="flex mt-8 sm:mt-12 md:mt-16">
             <MainHeroSection
               roomName={roomName}
               setRoomName={setRoomName}
@@ -124,7 +124,7 @@ export default function Room() {
               open={open}
               setOpen={setOpen}
             />
-            <div className="fixed right-0 flex-col">
+            <div className="hidden md:flex fixed right-0 flex-col">
               <RightBar />
               <Community />
             </div>
@@ -161,37 +161,37 @@ function MainHeroSection({
   setOpen,
 }: MainHeroSectionProps) {
   return (
-    <div className="pl-8 sm:w-full md:w-[74vw] pr-4">
+    <div className="px-3 sm:px-5 md:pl-8 md:pr-4 w-full md:w-[74vw]">
 
-      <div className="flex items-center sm:gap-1 gap-4 mb-6 mt-8 p-2 pl-0 rounded-3xl backdrop-blur-sm w-fit">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-3 md:gap-4 mb-6 mt-6 sm:mt-8 p-2 pl-0 rounded-3xl backdrop-blur-sm sm:w-fit">
       
-        <div className="flex md:items-center">
+        <div className="flex items-center w-full sm:w-auto">
           <input
             type="text"
             placeholder="Search by room name or room id..."
             value={roomName}
             onChange={(e) => setRoomName(e.target.value)}
-            className="sm:w-[56vw] sm:px-5 sm:py-4 sm:rounded-3xl md:w-[35vw] md:px-5 md:py-3.5 md:rounded-3xl focus:outline-none bg-slate-800/60 border border-slate-700/40 text-white placeholder:text-slate-500"
+            className="w-full sm:w-[50vw] md:w-[35vw] px-4 py-3 sm:px-5 sm:py-3.5 md:py-3.5 rounded-2xl sm:rounded-3xl text-sm sm:text-base focus:outline-none bg-slate-800/60 border border-slate-700/40 text-white placeholder:text-slate-500"
           />
           <img
             src="./search.svg"
             onClick={() => handleSearch()}
-            alt=""
-            className="sm:w-[3vw] md:w-[1.6vw] relative sm:-left-[4vw] -left-[3vw] cursor-pointer"
+            alt="Search"
+            className="w-5 h-5 sm:w-5 sm:h-5 md:w-[1.6vw] md:h-[1.6vw] relative -left-9 sm:-left-10 cursor-pointer"
           />
         </div>
 
       
         <div
-          className="sm:w-[20vw] sm:px-2 sm:py-4 sm:gap-2 md:gap-0 cursor-pointer bg-amber-300 hover:bg-amber-400 md:w-[11.3vw] flex justify-center px-5 py-3.5 rounded-3xl transition-all duration-300"
+          className="cursor-pointer bg-amber-300 hover:bg-amber-400 w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-3 sm:py-3.5 rounded-2xl sm:rounded-3xl transition-all duration-300"
           onClick={() => handleRoomCreate()}
         >
           <img
             src="./plus-solid-full.svg"
             alt=""
-            className="sm:w-[3vw] md:w-[1.5vw] md:mr-3 brightness-0"
+            className="w-4 h-4 sm:w-5 sm:h-5 md:w-[1.5vw] md:h-[1.5vw] brightness-0"
           />
-          <span className="text-slate-900 font-medium">Create Room</span>
+          <span className="text-slate-900 font-medium text-sm sm:text-base">Create Room</span>
         </div>
       </div>
 
