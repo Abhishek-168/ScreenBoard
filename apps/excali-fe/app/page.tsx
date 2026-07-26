@@ -2,58 +2,20 @@ import Link from "next/link";
 import VideoPlayer from "./videoPlayer";
 import "./globals.css";
 import TechCarousel from "./components/TechCarousel";
+import HomeNavbar from "./components/HomeNavbar";
 
 export default function Home() {
   return (
     <>
       <img src="./testbg7.png" alt="" className="md:w-screen h-screen fixed -z-10" />
       <div className="p-4 md:p-6 md:pl-20 md:pr-20">
-        <NavBar />
+        <HomeNavbar />
         <HeroSection />
         <TechCarousel />
         <CoreFeatures />
         <Footer />
       </div>
     </>
-  );
-}
-
-function NavBar() {
-  return (
-    <nav className="flex md:flex-row justify-between items-center gap-4 md:gap-0 md:h-[2.5vw] w-full">
-      <div>
-        <span className="text-2xl md:text-3xl text-white font-finger-paint cursor-pointer">
-          ScreenBoard
-        </span>
-      </div>
-      <div className="hidden md:flex md:flex-wrap md:items-center md:gap-4 md:justify-between md:w-[29vw]">
-        <Link href="/github.com" className="text-white cursor-pointer">
-          Github
-        </Link>
-        <Link href="/docs" className="text-white cursor-pointer">
-          Docs
-        </Link>
-        <Link href="/trending" className="text-white cursor-pointer">
-          Trending
-        </Link>
-        <Link
-          href="/signup"
-          className="inline-block cursor-pointer bg-amber-300 px-4 py-1 md:px-6 md:py-2 text-black font-bold
-             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
-        >
-          <span className="block skew-x-20">Get Started</span>
-        </Link>
-
-        <Link href="/signin" className="text-white cursor-pointer">
-          Log in
-        </Link>
-      </div>
-      <div className="md:hidden lg:hidden block">
-        <Link href="/signin" className="text-white cursor-pointer">
-          Log in
-        </Link>
-      </div>
-    </nav>
   );
 }
 
@@ -129,8 +91,8 @@ function CoreFeatures() {
         <img src="./sidesvg.png" alt="" className="absolute  md:block md:absolute md:-left-16 md:top-0" />
         <div className="pl-4 md:pl-30">
           <div>
-            <Feature title="Modern Drawing Canvas" 
-            description="Draw on a modern, responsive canvas with a variety of tools and options. Drag elements, change colors, and customize your artwork with ease.
+            <Feature title="Modern Drawing Canvas"
+              description="Draw on a modern, responsive canvas with a variety of tools and options. Drag elements, change colors, and customize your artwork with ease.
             Add text, shapes, and images to bring your ideas to life. Use AI-powered tools to enhance your creativity." />
           </div>
           <div>
@@ -146,7 +108,7 @@ function CoreFeatures() {
   );
 }
 
-function Feature({ title , description}: { title: string , description: string}) {
+function Feature({ title, description }: { title: string, description: string }) {
   return (
     <>
       <div className="flex md:flex-row items-center p-4 md:p-8 w-full md:w-[70vw] mx-auto rounded-xl gap-6 md:gap-10 md:pl-[4vw] mt-6 md:mt-[1.4vw]">

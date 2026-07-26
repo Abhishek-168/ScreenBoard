@@ -27,12 +27,29 @@ app.post("/signup", async (req: Request, res: Response) => {
   const parsedData = userSchema.safeParse(req.body);
   if (!parsedData.success) {
     console.log("Failed at Signup Zod level");
-    return;
+    return res.status(411).send({ error: "Empty name or email is not allowed"});
   }
   console.log("safe parse is : ", parsedData);
   const email = parsedData.data?.email || "";
   const password = parsedData.data?.password || "";
   const name = parsedData.data?.name || "";
+
+  // check if name and email not already in db
+  try {
+    const userExist = await prismaClient.user.findFirst({
+      where: {
+        email: email,
+      },
+    });
+    if (userExist) {
+      console.log("User already exists");
+      return res.status(400).send({ error: "User with this email already exists" });
+    }
+  }catch(error){
+    console.log("error while checking user exists ", error)
+    return res.status(400).send({ error: "error while checking user exists" });
+  }
+
 
   try {
     const user = await prismaClient.user.create({
@@ -60,10 +77,10 @@ app.post("/signin", async (req: Request, res: Response) => {
   const parsedData = signinSchema.safeParse(req.body);
   if (!parsedData.success) {
     console.log("Failed at Signin Zod level");
-    return;
+    return res.status(411).send({ error: "Invalid credentials"});
   }
   const { email, password } = parsedData.data;
-  console.log("Email: " + email + "Password: " + password);
+  // console.log("Email: " + email + "Password: " + password);
 
   const user = await prismaClient.user.findFirst({
     where: {
@@ -73,7 +90,7 @@ app.post("/signin", async (req: Request, res: Response) => {
   });
   if (!user) {
     console.log("user not found");
-    return res.status(404).send({ error: "user not found in db" });
+    return res.status(404).send({ error: "User not found with given credentials" });
   }
   const userId = user.id;
 

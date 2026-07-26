@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BE_URL } from "../config";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -10,18 +10,41 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error checking token:", error);
+    }
+  }, [])
+
   const handleSubmit = async () => {
+    if (!name.trim() || !email.trim() || !password.trim()) {
+      setError("All fields are required");
+      return;
+    }
+    setError("");
     try {
       setLoading(true);
-      const { data } = await axios.post(`${BE_URL}/signup`, {
+      const res = await axios.post(`${BE_URL}/signup`, {
         name,
         email,
         password,
       });
-      const token = data;
+      if (res.data.error) {
+        setError(res.data.error);
+        setLoading(false);
+        return;
+      }
+
+      const token = res.data;
       if (!token) {
         console.error("Missing token in response");
         setLoading(false);
@@ -29,10 +52,11 @@ export default function Signup() {
       }
       localStorage.setItem("token", token);
       router.push("/rooms");
-      console.log(data);
+      console.log("Signup successfull");
       setLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during signup:", error);
+      setError(error.response.data.error);
       setLoading(false);
     }
   };
@@ -76,6 +100,7 @@ export default function Signup() {
             onChange={(e) => setPassword(e.target.value)}
             className="p-3 md:p-4 border border-violet-800 focus:border-amber-300 autofill:bg-gray-900 outline-none rounded-xl bg-transparent text-white"
           />
+          {error && <p className="text-red-500">{error}</p>}
           <button
             className="bg-amber-300 p-3 md:p-4 cursor-pointer rounded-xl text-lg md:text-xl text-black font-charlie font-bold hover:bg-amber-400 transition"
             onClick={() => handleSubmit()} disabled={loading}

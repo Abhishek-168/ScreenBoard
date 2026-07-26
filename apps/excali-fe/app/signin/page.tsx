@@ -1,7 +1,7 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BE_URL } from "../config";
 import Link from "next/link";
@@ -9,17 +9,42 @@ import Link from "next/link";
 export default function Signin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        router.push("/");
+      }
+    } catch (error) {
+      console.error("Error checking token:", error);
+    }
+  }, [])
+
   const handleSubmit = async () => {
+
+    if (!email.trim() || !password.trim()) {
+      setError("Please fill all the fields");
+      return;
+    }
     try {
       setLoading(true);
-      const { data } = await axios.post(`${BE_URL}/signin`, {
+      setError("");
+      const res = await axios.post(`${BE_URL}/signin`, {
         email,
         password,
       });
-      const token = data;
+      console.log("Response from BE:", res.data);
+      if (res.data.error) {
+        setError(res.data.error);
+        setLoading(false);
+        return;
+      }
+
+      const token = res.data;
       if (!token) {
         console.error("Missing token in response");
         setLoading(false);
@@ -28,8 +53,9 @@ export default function Signin() {
       localStorage.setItem("token", token);
       router.push("/rooms");
       setLoading(false);
-    } catch (error) {
-      console.error("Sign in failed:", error);
+    } catch (error: any) {
+      console.error("Sign in failed:", error.response.data.error);
+      setError(error.response.data.error);
       setLoading(false);
     }
   };
@@ -70,6 +96,7 @@ export default function Signin() {
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
+          {error && <p className="text-red-500">{error}</p>}
           <span className="text-center text-sm md:text-base text-white">
             Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-amber-300 hover:underline">
