@@ -46,14 +46,18 @@ export default function NavBar() {
                     Trending
                 </Link>
 
-                {token ? (
+                {token ? (<>
+                    <Link href="/rooms" className="text-white cursor-pointer">
+                        Rooms
+                    </Link>
                     <button
                         onClick={handleLogout}
                         className="inline-block cursor-pointer bg-amber-300 px-4 py-1 md:px-6 md:py-2 text-black font-bold
-             skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
+                        skew-x-[-20deg] shadow-md hover:bg-amber-400 transition"
                     >
                         <span className="block skew-x-20">Log out</span>
                     </button>
+                </>
                 ) : (
                     <>
                         <Link
